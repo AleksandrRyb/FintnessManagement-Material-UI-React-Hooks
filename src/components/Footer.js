@@ -2,9 +2,11 @@ import React from 'react';
 import {Paper, Tab, Tabs} from '@material-ui/core';
 
 const Footer = ({muscles}) => {
+
     const handleChange=()=>{
 
-    }
+    };
+
     return (
         <Paper>
             <Tabs value={0} onChange={handleChange} indicatorColor="primary" textColor="primary" centered >
