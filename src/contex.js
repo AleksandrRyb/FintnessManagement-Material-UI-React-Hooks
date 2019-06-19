@@ -10,7 +10,8 @@ class ContexProvider extends Component {
         exercises,
         selectedMuscle:muscles,
         footerMenuToSelect:0,
-        selectedExercise:null
+        selectedExercise:null,
+        OpenCreateExerciseModal:false,
     };
 
     onSelectHandler=(index)=>{
@@ -40,11 +41,16 @@ class ContexProvider extends Component {
         })
     };
 
+    OpenModalHandler=()=>{
+        this.setState({OpenCreateExerciseModal:!this.state.OpenCreateExerciseModal});
+    };
+
     render() {
         return (
             <FitnessContext.Provider value={{...this.state,
                                             onSelectHandler:this.onSelectHandler,
-                                            onSelectExerciseHandler:this.onSelectExerciseHandler}}>
+                                            onSelectExerciseHandler:this.onSelectExerciseHandler,
+                                            OpenModalHandler:this.OpenModalHandler}}>
                 {this.props.children}
             </FitnessContext.Provider>
         );

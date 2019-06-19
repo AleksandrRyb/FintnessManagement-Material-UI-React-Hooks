@@ -3,6 +3,7 @@ import React from 'react';
 //import Toolbar from '@material-ui/core/Toolbar';
 import {AppBar, Toolbar, IconButton, Typography, Button} from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
+import AddEcercise from './dialogs/AddExercise';
 
 const Header = () => {
     return (
@@ -12,10 +13,12 @@ const Header = () => {
                     <IconButton edge="start"  color="inherit" aria-label="Menu">
                         <Menu/>
                     </IconButton>
-                    <Typography variant="h6">
+
+                    <Typography variant="h6" style={{flex:1}}>
                        Exercise Database
                     </Typography>
-                    <Button color="inherit">Login</Button>
+
+                    <AddEcercise />
                 </Toolbar>
             </AppBar>
         </div>
