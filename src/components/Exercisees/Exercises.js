@@ -3,26 +3,28 @@ import {Grid, Paper, Typography, List, ListItem, ListItemText, ListItemLink} fro
 
 
 const style={
-    Paper:{padding:20, marginTop:10, marginBottom:10}
-}
+    Paper:{padding:20, marginTop:10, marginBottom:10, height:500, overflowY:'auto'}
+};
 
-const Exercises = ({exercisesPlan}) => {
-    console.log(exercisesPlan);
+const Exercises = (props) => {
+
     return (
         <Grid container>
             <Grid item xs>
-                <Paper style={style.Paper}>{/*because "exercisees" is an array containing 5 different arrays where each of these array haas a value and an object*/}
-                    {exercisesPlan.map(([muscleGroup, exercises])=>{
+                <Paper style={style.Paper}>
+                    {props.muscles.map(muscle=>{
                         return( <React.Fragment>
                                   <Typography variant="h5" style={{textTransform:'capitalize'}}>
-                                    {muscleGroup}
+                                    {muscle}
                                   </Typography>
                                   <List component="ul">
-                                    {exercises.map(exercise=>{
-                                         return ( <ListItem button>
-                                                      {exercise.title}
-                                                    <ListItemText primary={'Aman'}  style={{color:'red'}} />
-                                                  </ListItem> );
+                                    {props.exercises.map(exercise=>{
+                                        if(exercise.muscles===muscle){
+                                            return ( <ListItem button>
+                                                        {console.log('each',exercise)}
+                                                        <ListItemText primary={exercise.title} />
+                                                     </ListItem> );
+                                        }
                                       })
                                     }
                                   </List>
@@ -33,7 +35,8 @@ const Exercises = ({exercisesPlan}) => {
             </Grid>
             <Grid item xs>
                 <Paper style={style.Paper}>
-                    Right Plane
+                    <Typography variant="h4" style={{marginTop:'20px'}}>Welcome</Typography>
+                    <Typography variant="body1">Please select exercise from the list on the left</Typography>
                 </Paper>
             </Grid>
         </Grid>
