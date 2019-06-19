@@ -8,8 +8,11 @@ import {muscles, exercises} from './store';
 class App extends Component {
 
     state={
-        muscles,
-        exercises
+        muscles:muscles,
+        exercises,
+        selectedMuscle:muscles,
+        footerMenuToSelect:0,
+        selectedExercise:null
     };
 
     getExerciseByMuscles=()=>{
@@ -44,15 +47,42 @@ class App extends Component {
     };
 
 
+    onSelectHandler=(index)=>{
+        let temSelectedMuscle=[];
+        let tempFooterMenuSelection=0;
+
+        if(index < 0){
+            temSelectedMuscle=this.state.muscles;
+            tempFooterMenuSelection=0;
+        }else {
+            this.state.muscles.forEach((muscle,ind)=>{
+                if(ind===index){
+                    temSelectedMuscle.push(muscle);
+                }
+            });
+            tempFooterMenuSelection=index+1;
+        }
+
+        this.setState({selectedMuscle:temSelectedMuscle, footerMenuToSelect:tempFooterMenuSelection})
+    };
+
+    onSelectExerciseHandler=(id)=>{
+        this.state.exercises.forEach(exercise=>{
+            if(exercise.id===id){
+                this.setState({selectedExercise:exercise})
+            }
+        })
+    };
+
     render() {
 
         return (
             <React.Fragment>
               <Header/>
                 <Box align="center">
-                  <Exercises muscles={this.state.muscles} exercises={this.state.exercises}/>
+                  <Exercises muscles={this.state.selectedMuscle} exercises={this.state.exercises} onSelectExercise={this.onSelectExerciseHandler} selectedExercise={this.state.selectedExercise}/>
                 </Box>
-              <Footer muscles={muscles}/>
+              <Footer muscles={muscles} onSelect={this.onSelectHandler} footerMenuToSelect={this.state.footerMenuToSelect}/>
             </React.Fragment>
         );
     }
