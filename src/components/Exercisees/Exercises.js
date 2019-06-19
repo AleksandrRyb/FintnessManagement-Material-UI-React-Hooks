@@ -1,5 +1,7 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import {Grid, Paper, Typography, List, ListItem, ListItemText, ListItemLink} from '@material-ui/core';
+import {FitnessContext} from '../../contex';
+
 
 
 const style={
@@ -8,20 +10,23 @@ const style={
 
 const Exercises = (props) => {
 
+    const context=useContext(FitnessContext);
+    const { muscles, exercises, selectedExercise}=context;
+
     return (
         <Grid container>
             <Grid item xs>
                 <Paper style={style.Paper}>
-                    {props.muscles.map(muscle=>{
+                    {muscles.map(muscle=>{
                         return( <React.Fragment key={muscle}>
                                   <Typography variant="h5" style={{textTransform:'capitalize'}}>
                                     {muscle}
                                   </Typography>
                                   <List component="ul">
-                                    {props.exercises.map((exercise,index)=>{
+                                    {exercises.map((exercise,index)=>{
                                         if(exercise.muscles===muscle){
-                                            return ( <ListItem button key={exercise.id}>
-                                                        <ListItemText primary={exercise.title} onClick={()=>props.onSelectExercise(exercise.id)}/>
+                                            return ( <ListItem button key={exercise.id} onClick={()=>context.onSelectExerciseHandler(exercise.id)}>
+                                                        <ListItemText primary={exercise.title} />
                                                      </ListItem> );
                                         }
                                       })
@@ -34,8 +39,8 @@ const Exercises = (props) => {
             </Grid>
             <Grid item xs>
                 <Paper style={style.Paper}>
-                    <Typography variant="h4" style={{marginTop:'20px'}}>{props.selectedExercise? props.selectedExercise.title:'Welcome'}</Typography>
-                    <Typography variant="body1">{props.selectedExercise? '':'Please select exercise from the list on the left'}{props.selectedExercise? props.selectedExercise.description:''}</Typography>
+                    <Typography variant="h4" style={{marginTop:'20px'}}>{selectedExercise? selectedExercise.title:'Welcome'}</Typography>
+                    <Typography variant="body1">{selectedExercise? '':'Please select exercise from the list on the left'}{selectedExercise? selectedExercise.description:''}</Typography>
                 </Paper>
             </Grid>
         </Grid>

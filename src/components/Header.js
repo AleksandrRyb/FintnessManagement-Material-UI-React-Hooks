@@ -7,7 +7,7 @@ import {Menu} from '@material-ui/icons';
 const Header = () => {
     return (
         <div>
-            <AppBar position="static">
+            <AppBar position="static" >
                 <Toolbar>
                     <IconButton edge="start"  color="inherit" aria-label="Menu">
                         <Menu/>
