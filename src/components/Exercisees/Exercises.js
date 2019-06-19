@@ -11,13 +11,13 @@ const style={
 const Exercises = (props) => {
 
     const context=useContext(FitnessContext);
-    const { muscles, exercises, selectedExercise}=context;
+    const {selectedMuscle, exercises, selectedExercise}=context;
 
     return (
         <Grid container>
             <Grid item xs>
                 <Paper style={style.Paper}>
-                    {muscles.map(muscle=>{
+                    {selectedMuscle.map(muscle=>{
                         return( <React.Fragment key={muscle}>
                                   <Typography variant="h5" style={{textTransform:'capitalize'}}>
                                     {muscle}

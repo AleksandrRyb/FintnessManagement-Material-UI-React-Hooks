@@ -39,7 +39,7 @@ const AddExercise=(props)=>{
                 </DialogContent>
 
                 <DialogActions>
-                    <Button color="primary" varient="contained">
+                    <Button variant="contained" color="primary">
                         Create
                     </Button>
                 </DialogActions>
