@@ -15,7 +15,7 @@ const Header = () => {
                     </IconButton>
 
                     <Typography variant="h6" style={{flex:1}}>
-                       Exercise Database
+                       Fitness Manager
                     </Typography>
 
                     <AddEcercise />
