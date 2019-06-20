@@ -2,16 +2,16 @@ import {exercises, muscles} from "./store";
 
 const getExerciseByMuscles=()=>{
     /*  return Object.entries(this.state.exercises.reduce((exercises, exercise)=>{
-          const {muscles}=exercise;
-          exercises[muscles]=exercises[muscles]? {...exercises[muscles], exercise}:{exercise};
-          //exercises[muscles]={...exercises[muscles], exercise}
+          const {muscle}=exercise;
+          exercises[muscle]=exercises[muscle]? {...exercises[muscle], exercise}:{exercise};
+          //exercises[muscle]={...exercises[muscle], exercise}
           return exercises;
       }, {}) );//Object.entries() turns object into array*/
     console.log('running')
     let tempExercisePlan=[];
     exercises.forEach((exercise, index)=>{
         muscles.forEach(muslce=>{
-            if(muslce===exercise.muscles){
+            if(muslce===exercise.muscle){
                 const myExicise={...exercise};
                 const myMuslce=muslce;
                 let tempArr=[]
