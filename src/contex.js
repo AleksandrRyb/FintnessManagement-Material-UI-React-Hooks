@@ -65,7 +65,7 @@ class ContexProvider extends Component {
     };
 
     addNewExerciseToList=()=>{
-        this.setState({exercises:[...exercises, this.state.addedExercise],  OpenCreateExerciseModal:false},
+        this.setState({exercises:[...this.state.exercises, this.state.addedExercise],  OpenCreateExerciseModal:false},
             ()=>{ this.setState({addedExercise:{id:'', title: '',description: '',muscle: ''} });
         });
     };
@@ -74,9 +74,14 @@ class ContexProvider extends Component {
         this.state.exercises.forEach(exercise=>{
             const tempExerc={...exercise};
             tempExercises=[...tempExercises, tempExerc];
-        });
+        });//This safe copying of exercises into tempExercises was unnecessary because we are using "filter()" later anyway which don't changes the original array
         tempExercises=tempExercises.filter(exercise=>exercise.id!==id);
-        this.setState({exercises:tempExercises});
+
+        if(tempExercises.length>0){
+            this.setState({exercises:tempExercises});
+        }else{
+            this.setState({exercises:tempExercises, selectedExercise:null});
+        }
     };
 
     render() {

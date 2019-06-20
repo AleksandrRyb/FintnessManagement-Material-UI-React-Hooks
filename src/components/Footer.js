@@ -8,7 +8,7 @@ const Footer = (props) => {
     const { muscles, footerMenuToSelect}=context;
 
     return (
-        <Grid xs={12} sm={12} md={12} lg={12} xl={12}>
+        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <Paper>
                 <Tabs value={footerMenuToSelect}  indicatorColor="primary" textColor="primary" centered >
                     <Tab label="All" onClick={()=>context.onSelectHandler(-1)}/>
