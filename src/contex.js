@@ -17,7 +17,9 @@ class ContexProvider extends Component {
             title: '',
             description: '',
             muscle: ''
-        }
+        },
+        editExercise:false,
+        exerciseToEdit:null
     };
 
     onSelectHandler=(index)=>{
@@ -84,6 +86,32 @@ class ContexProvider extends Component {
         }
     };
 
+
+    onEditExercise=(id)=>{
+        let exerciseToEdit={};
+        this.state.exercises.forEach(exercise=>{
+            if(exercise.id===id){
+                exerciseToEdit={...exercise}
+            }
+        });
+        this.setState({exerciseToEdit:exerciseToEdit}, ()=>{
+            this.setState({editExercise:true})
+        });
+        console.log('ToeDit',exerciseToEdit.id);
+    };
+    editExerciseTitle=()=>{
+
+    };
+    editExerciseMuscle=()=>{
+
+    };
+    editExerciseDescription=()=>{
+
+    };
+    saveEditedExercise=()=>{
+
+    };
+
     render() {
         return (
             <FitnessContext.Provider value={{...this.state,
@@ -94,7 +122,8 @@ class ContexProvider extends Component {
                                             addExerciseMuscle:this.addExerciseMuscle,
                                             addExerciseDescription:this.addExerciseDescription,
                                             addNewExerciseToList:this.addNewExerciseToList,
-                                            deleteExerciseFromList:this.deleteExerciseFromList}}>
+                                            deleteExerciseFromList:this.deleteExerciseFromList,
+                                            onEditExercise:this.onEditExercise}}>
                 {this.props.children}
             </FitnessContext.Provider>
         );
