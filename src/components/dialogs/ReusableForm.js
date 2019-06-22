@@ -49,7 +49,14 @@ const ReusableForm = (props) => {
                 margin="normal"
             /><br/>
             <FormControl>
-                {nativeSelectOption}
+                <NativeSelect  className={props.classes.formControl}
+                               value={muscle}
+                               onChange={(event)=>props.onMuscleNativeSelectHandler(event)}
+                               style={{cursor:'pointer'}}
+                               input={<Input name="muscle" id="muscle" />}>
+                    <option value={''} disabled></option>
+                    {muscles.map(muscle=><option value={muscle} key={muscle}>{muscle}</option>)}
+                </NativeSelect>
             </FormControl><br/>
             <TextField
                 id="standard-multiline-flexible"

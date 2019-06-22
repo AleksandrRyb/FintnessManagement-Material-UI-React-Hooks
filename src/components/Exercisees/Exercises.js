@@ -35,7 +35,11 @@ const Exercises =(props)=>{
     const EditFormClasses = useEditFormStyles();
 
     const context=useContext(FitnessContext);
-    const {selectedMuscle, exercises, selectedExercise, editExercise, exerciseToEdit:{title, description, muscle}}=context;
+    const {selectedMuscle, exercises, selectedExercise, editExercise, muscles}=context;
+
+    if(editExercise){
+        var { exerciseToEdit:{title, description, muscle} }=context;
+    }
 
     useEffect(()=>{
 
@@ -79,13 +83,13 @@ const Exercises =(props)=>{
                 </Paper>
             </Grid>
             <Grid item xs={8} sm={8} md={8} lg={8} xl={8}>
-                {editExercise? <ReusableForm editExercise
+                { editExercise? <ReusableForm editExercise
                                              classes={EditFormClasses}
                                              addedExercise={{muscles, title, description, muscle}}
-                                             onTitleTextFieldHandler={context.addExerciseTitle}
-                                             onMuscleNativeSelectHandler={context.addExerciseMuscle}
-                                             onDcpTitleTextFieldHandler={context.addExerciseDescription}
-                                             onButtonHandler={validateAndAddExercise}/> :
+                                             onTitleTextFieldHandler={context.editExerciseTitle}
+                                             onMuscleNativeSelectHandler={context.editExerciseMuscle}
+                                             onDcpTitleTextFieldHandler={context.editExerciseDescription}
+                                             onButtonHandler={context.saveEditedExercise}/> :
                     <React.Fragment>
                      <Paper style={style.Paper}>
                         <Typography variant="h4" style={{marginTop:'20px'}}>
@@ -95,7 +99,7 @@ const Exercises =(props)=>{
                             {selectedExercise? '':'Please select exercise from the list on the left'}{selectedExercise? selectedExercise.description:''}
                         </Typography>
                      </Paper>
-                   </React.Fragment>}
+                   </React.Fragment> }
             </Grid>
         </Grid>
     );

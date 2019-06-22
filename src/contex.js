@@ -99,17 +99,29 @@ class ContexProvider extends Component {
         });
         console.log('ToeDit',exerciseToEdit.id);
     };
-    editExerciseTitle=()=>{
-
+    editExerciseTitle=(event)=>{
+        let tempTitle=event.target.value;
+        let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
+        this.setState({exerciseToEdit:{...this.state.exerciseToEdit, title:tempTitle, id:tempId}})
     };
-    editExerciseMuscle=()=>{
-
+    editExerciseMuscle=(event)=>{
+        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, muscle:event.target.value} });
     };
-    editExerciseDescription=()=>{
-
+    editExerciseDescription=(event)=>{
+        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, description:event.target.value} });
     };
     saveEditedExercise=()=>{
-
+        //validate
+        const editedExercise=this.state.exerciseToEdit;
+        const tempExercises=this.state.exercises.map(exercise=>{
+            if(exercise.id===editedExercise.id){
+                return editedExercise;
+            }else {
+                return exercise;
+            }
+        });
+        console.log('EditedExercise',editedExercise);
+        this.setState({exercises:tempExercises});
     };
 
     render() {
@@ -123,7 +135,11 @@ class ContexProvider extends Component {
                                             addExerciseDescription:this.addExerciseDescription,
                                             addNewExerciseToList:this.addNewExerciseToList,
                                             deleteExerciseFromList:this.deleteExerciseFromList,
-                                            onEditExercise:this.onEditExercise}}>
+                                            onEditExercise:this.onEditExercise,
+                                            editExerciseTitle:this.editExerciseTitle,
+                                            editExerciseMuscle:this.editExerciseMuscle,
+                                            editExerciseDescription:this.editExerciseDescription,
+                                            saveEditedExercise:this.saveEditedExercise}}>
                 {this.props.children}
             </FitnessContext.Provider>
         );
