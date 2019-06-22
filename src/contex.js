@@ -19,7 +19,8 @@ class ContexProvider extends Component {
             muscle: ''
         },
         editExercise:false,
-        exerciseToEdit:null
+        exerciseToEdit:null,
+        indexOfExeToEdit:'',
     };
 
     onSelectHandler=(index)=>{
@@ -87,14 +88,14 @@ class ContexProvider extends Component {
     };
 
 
-    onEditExercise=(id)=>{
+    onEditExercise=(index)=>{
         let exerciseToEdit={};
-        this.state.exercises.forEach(exercise=>{
-            if(exercise.id===id){
+        this.state.exercises.forEach((exercise,indx)=>{
+            if(indx===index){
                 exerciseToEdit={...exercise}
             }
         });
-        this.setState({exerciseToEdit:exerciseToEdit}, ()=>{
+        this.setState({exerciseToEdit:exerciseToEdit, indexOfExeToEdit:index}, ()=>{
             this.setState({editExercise:true})
         });
         console.log('ToeDit',exerciseToEdit.id);
@@ -113,15 +114,15 @@ class ContexProvider extends Component {
     saveEditedExercise=()=>{
         //validate
         const editedExercise=this.state.exerciseToEdit;
-        const tempExercises=this.state.exercises.map(exercise=>{
-            if(exercise.id===editedExercise.id){
+        const tempExercises=this.state.exercises.map((exercise,index)=>{
+            if(index===this.state.indexOfExeToEdit){
                 return editedExercise;
             }else {
                 return exercise;
             }
         });
-        console.log('EditedExercise',editedExercise);
-        this.setState({exercises:tempExercises});
+        console.log('EditedExercise',tempExercises);
+        this.setState({exercises:tempExercises, editExercise:false});
     };
 
     render() {

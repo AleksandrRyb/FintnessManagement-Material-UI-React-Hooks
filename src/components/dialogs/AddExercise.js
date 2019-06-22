@@ -17,7 +17,7 @@ import { withStyles } from '@material-ui/core/styles';//For Statefull Components
 
 const useStyles=makeStyles(theme=>({
     fab: {
-        margin:2,
+        margin:1,
     },
     formControl:{
         minWidth: 500,

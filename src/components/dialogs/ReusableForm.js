@@ -5,7 +5,6 @@ import TextField from '@material-ui/core/TextField';
 import DialogActions from '@material-ui/core/DialogActions';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
-import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 
 
@@ -14,28 +13,6 @@ const ReusableForm = (props) => {
 
     const {muscles, title, description, muscle}=props.addedExercise;
 
-
-    let nativeSelectOption=(
-        <NativeSelect  className={props.classes.formControl}
-                       value={muscle}
-                       onChange={(event)=>props.onMuscleNativeSelectHandler(event)}
-                       style={{cursor:'pointer'}}
-                       input={<Input name="muscle" id="muscle" />}>
-            <option value={''} disabled></option>
-            {muscles.map(muscle=><option value={muscle} key={muscle}>{muscle}</option>)}
-        </NativeSelect>
-    );
-
-    if(props.editExercise){
-        nativeSelectOption=(
-            <NativeSelect  className={props.classes.formControl}
-                           value={muscle}
-                           style={{cursor:'pointer'}}
-                           input={<Input name="muscle" id="muscle" />}>
-                <option value={muscle}></option>
-            </NativeSelect>
-        );
-    }
 
 
     return (
@@ -47,7 +24,8 @@ const ReusableForm = (props) => {
                 value={title}
                 onChange={(event)=>props.onTitleTextFieldHandler(event)}
                 margin="normal"
-            /><br/>
+            />
+            <br/>
             <FormControl>
                 <NativeSelect  className={props.classes.formControl}
                                value={muscle}
@@ -57,7 +35,8 @@ const ReusableForm = (props) => {
                     <option value={''} disabled></option>
                     {muscles.map(muscle=><option value={muscle} key={muscle}>{muscle}</option>)}
                 </NativeSelect>
-            </FormControl><br/>
+            </FormControl>
+            <br/>
             <TextField
                 id="standard-multiline-flexible"
                 label="Description"
@@ -70,7 +49,7 @@ const ReusableForm = (props) => {
             />
             <DialogActions>
                 <Button variant="contained" color="primary" onClick={props.onButtonHandler}>
-                    Create
+                    Done
                 </Button>
             </DialogActions>
         </form>

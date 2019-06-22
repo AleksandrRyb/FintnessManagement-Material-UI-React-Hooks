@@ -1,15 +1,5 @@
 import React,{useContext, useEffect} from 'react';
-import {
-    Grid,
-    Paper,
-    Typography,
-    List,
-    ListItem,
-    ListItemText,
-    ListItemSecondaryAction,
-    IconButton,
-    makeStyles
-} from '@material-ui/core';
+import {Grid, Paper, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, makeStyles} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import BorderColor from '@material-ui/icons/BorderColor';
 import {FitnessContext} from '../../contex';
@@ -21,11 +11,8 @@ const style={
 };
 
 const useEditFormStyles=makeStyles(theme=>({
-    fab: {
-        margin:2,
-    },
     formControl:{
-        minWidth: 500,
+        minWidth:'50em',
     }
 }));
 
@@ -42,7 +29,6 @@ const Exercises =(props)=>{
     }
 
     useEffect(()=>{
-
     }, [exercises, selectedMuscle]);
 
 
@@ -63,7 +49,7 @@ const Exercises =(props)=>{
                                             <ListItem button key={exercise.id} onClick={()=>context.onSelectExerciseHandler(exercise.id)}>
                                                 <ListItemText primary={exercise.title} />
                                                 <ListItemSecondaryAction>
-                                                    <IconButton edge="end" aria-label="Delete" onClick={()=>context.onEditExercise(exercise.id)}>
+                                                    <IconButton edge="end" aria-label="Delete" onClick={()=>context.onEditExercise(index)}>
                                                         <BorderColor />
                                                     </IconButton>
                                                     <IconButton edge="end" aria-label="Delete" onClick={()=>context.deleteExerciseFromList(exercise.id)}>
@@ -83,14 +69,14 @@ const Exercises =(props)=>{
                 </Paper>
             </Grid>
             <Grid item xs={8} sm={8} md={8} lg={8} xl={8}>
-                { editExercise? <ReusableForm editExercise
-                                             classes={EditFormClasses}
-                                             addedExercise={{muscles, title, description, muscle}}
-                                             onTitleTextFieldHandler={context.editExerciseTitle}
-                                             onMuscleNativeSelectHandler={context.editExerciseMuscle}
-                                             onDcpTitleTextFieldHandler={context.editExerciseDescription}
-                                             onButtonHandler={context.saveEditedExercise}/> :
-                    <React.Fragment>
+                { editExercise? ( <ReusableForm editExercise
+                                                classes={EditFormClasses}
+                                                addedExercise={{muscles, title, description, muscle}}
+                                                onTitleTextFieldHandler={context.editExerciseTitle}
+                                                onMuscleNativeSelectHandler={context.editExerciseMuscle}
+                                                onDcpTitleTextFieldHandler={context.editExerciseDescription}
+                                                onButtonHandler={context.saveEditedExercise}/> ) :
+                  ( <React.Fragment>
                      <Paper style={style.Paper}>
                         <Typography variant="h4" style={{marginTop:'20px'}}>
                             {selectedExercise? selectedExercise.title:'Welcome'}
@@ -99,7 +85,8 @@ const Exercises =(props)=>{
                             {selectedExercise? '':'Please select exercise from the list on the left'}{selectedExercise? selectedExercise.description:''}
                         </Typography>
                      </Paper>
-                   </React.Fragment> }
+                   </React.Fragment> )
+                }
             </Grid>
         </Grid>
     );
