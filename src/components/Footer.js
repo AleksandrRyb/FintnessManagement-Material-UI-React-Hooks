@@ -5,7 +5,7 @@ import {FitnessContext} from '../contex';
 const Footer = (props) => {
 
     const context=useContext(FitnessContext);
-    const { muscles, footerMenuToSelect}=context;
+    const { muscles, footerMenuToSelect}=context.myState;
 
     return (
         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>

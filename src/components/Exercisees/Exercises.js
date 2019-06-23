@@ -31,10 +31,10 @@ const Exercises =(props)=>{
     const EditFormClasses = useEditFormStyles();
 
     const context=useContext(FitnessContext);
-    const {selectedMuscle, exercises, selectedExercise, editExercise, muscles}=context;
+    const {selectedMuscle, exercises, selectedExercise, editExercise, muscles}=context.myState;
 
     if(editExercise){
-        var { exerciseToEdit:{title, description, muscle} }=context;
+        var { exerciseToEdit:{title, description, muscle} }=context.myState;
     }
 
     useEffect(()=>{

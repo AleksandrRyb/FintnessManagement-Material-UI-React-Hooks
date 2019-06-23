@@ -1,150 +1,158 @@
-import React, {Component, useState} from 'react';
-import {muscles, exercises} from './store';
+import React,{useState} from 'react';
+import {muscles as m, exercises as e} from './store';
 
 const FitnessContext=React.createContext();
 
-class ContexProvider extends Component {
+const ContexProvider=(props)=>{
 
-    state={
-        muscles:muscles,
-        exercises,
-        selectedMuscle:muscles,
-        footerMenuToSelect:0,
-        selectedExercise:null,
-        OpenCreateExerciseModal:false,
-        addedExercise:{
-            id:'',
-            title: '',
-            description: '',
-            muscle: ''
-        },
-        editExercise:false,
-        exerciseToEdit:null,
-        indexOfExeToEdit:'',
+    const [muscles, setMuscles]=useState(m);
+    const [exercises, setExercises]=useState(e);
+    const [selectedMuscle, setSelectedMuscle]=useState(m);
+    const [footerMenuToSelect, setFooterMenuToSelect]=useState(0);
+    const [selectedExercise, setSelectedExercise]=useState(null);
+    const [OpenCreateExerciseModal, setOpenCreateExerciseModal]=useState(false);
+    const [addedExercise, setAddedExercise]=useState({id:'', title: '', description: '', muscle: ''});
+    const [editExercise, setEditExercise]=useState(false);
+    const [exerciseToEdit, setExerciseToEdit]=useState(null);
+    const [indexOfExeToEdit, setIndexOfExeToEdit]=useState('');
+    //setTodoList(prevTodoList => prevTodoList.concat(todoItem));
+    const myState={ muscles,
+                    exercises,
+                    selectedMuscle,
+                    footerMenuToSelect,
+                    selectedExercise,
+                    OpenCreateExerciseModal,
+                    addedExercise,
+                    editExercise,
+                    exerciseToEdit,
+                    indexOfExeToEdit
     };
 
-    onSelectHandler=(index)=>{
+    const onSelectHandler=(index)=>{
         let temSelectedMuscle=[];
         let tempFooterMenuSelection=0;
 
         if(index < 0){
-            temSelectedMuscle=this.state.muscles;
+            temSelectedMuscle=muscles;
             tempFooterMenuSelection=0;
         }else {
-            this.state.muscles.forEach((muscle, ind)=>{
+            muscles.forEach((muscle, ind)=>{
                 if(ind===index){
                     temSelectedMuscle.push(muscle);
                 }
             });
             tempFooterMenuSelection=index+1;
         }
-
-        this.setState({selectedMuscle:temSelectedMuscle, footerMenuToSelect:tempFooterMenuSelection})
+        setSelectedMuscle(temSelectedMuscle);
+        setFooterMenuToSelect(tempFooterMenuSelection);
     };
 
-    onSelectExerciseHandler=(id)=>{
-        this.state.exercises.forEach(exercise=>{
+    const onSelectExerciseHandler=(id)=>{
+        exercises.forEach(exercise=>{
             if(exercise.id===id){
-                this.setState({selectedExercise:exercise})
+                setSelectedExercise(exercise)
             }
         })
     };
 
-    OpenModalHandler=()=>{
-        this.setState({OpenCreateExerciseModal:!this.state.OpenCreateExerciseModal});
+    const OpenModalHandler=()=>{
+        setOpenCreateExerciseModal(!OpenCreateExerciseModal)
     };
 
-    addExerciseTitle=(event)=>{
+    const addExerciseTitle=(event)=>{
         event.preventDefault();
         let tempTitle=event.target.value;
         let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
-        this.setState({ addedExercise:{...this.state.addedExercise, title:tempTitle, id:tempId} });
+
+        setAddedExercise({...addedExercise, title:tempTitle, id:tempId});
     };
-    addExerciseMuscle=(event)=>{
-        this.setState({ addedExercise:{...this.state.addedExercise, muscle:event.target.value} });
+    const addExerciseMuscle=(event)=>{
+        setAddedExercise({...addedExercise, muscle:event.target.value});
     };
-    addExerciseDescription=(event)=>{
-        this.setState({ addedExercise:{...this.state.addedExercise, description:event.target.value} });
+    const addExerciseDescription=(event)=>{
+        setAddedExercise({...addedExercise, description:event.target.value});
     };
 
-    addNewExerciseToList=()=>{
-        this.setState({exercises:[...this.state.exercises, this.state.addedExercise],  OpenCreateExerciseModal:false},
-            ()=>{ this.setState({addedExercise:{id:'', title: '',description: '',muscle: ''} });
-        });
+    const addNewExerciseToList=()=>{
+        setExercises(prevExercise=>prevExercise.concat(addedExercise));
+        console.log('Exercises',exercises);
+        setOpenCreateExerciseModal(false);
+        setAddedExercise({id:'', title: '',description: '',muscle: ''});
     };
-    deleteExerciseFromList=(id)=>{
+    const deleteExerciseFromList=(id)=>{
         let tempExercises=[];
-        this.state.exercises.forEach(exercise=>{
+        exercises.forEach(exercise=>{
             const tempExerc={...exercise};
             tempExercises=[...tempExercises, tempExerc];
         });//This safe copying of exercises into tempExercises was unnecessary because we are using "filter()" later anyway which don't changes the original array
         tempExercises=tempExercises.filter(exercise=>exercise.id!==id);
 
         if(tempExercises.length>0){
-            this.setState({exercises:tempExercises});
+            setExercises(tempExercises)
         }else{
-            this.setState({exercises:tempExercises, selectedExercise:null});
+            setExercises(tempExercises);
+            setSelectedExercise(null);
         }
     };
 
 
-    onEditExercise=(index)=>{
+    const onEditExercise=(index)=>{
         let exerciseToEdit={};
-        this.state.exercises.forEach((exercise,indx)=>{
+        exercises.forEach((exercise,indx)=>{
             if(indx===index){
                 exerciseToEdit={...exercise}
             }
         });
-        this.setState({exerciseToEdit:exerciseToEdit, indexOfExeToEdit:index}, ()=>{
-            this.setState({editExercise:true})
-        });
+        setExerciseToEdit(exerciseToEdit);
+        setIndexOfExeToEdit(index);
+        setEditExercise(true);
         console.log('ToeDit',exerciseToEdit.id);
     };
-    editExerciseTitle=(event)=>{
+    const editExerciseTitle=(event)=>{
         let tempTitle=event.target.value;
         let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
-        this.setState({exerciseToEdit:{...this.state.exerciseToEdit, title:tempTitle, id:tempId}})
+
+        setExerciseToEdit({...exerciseToEdit, title:tempTitle, id:tempId})
     };
-    editExerciseMuscle=(event)=>{
-        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, muscle:event.target.value} });
+    const editExerciseMuscle=(event)=>{
+        setExerciseToEdit({...exerciseToEdit, muscle:event.target.value})
     };
-    editExerciseDescription=(event)=>{
-        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, description:event.target.value} });
+    const editExerciseDescription=(event)=>{
+        setExerciseToEdit({...exerciseToEdit,  description:event.target.value})
     };
-    saveEditedExercise=()=>{
+    const saveEditedExercise=()=>{
         //validate
-        const editedExercise=this.state.exerciseToEdit;
-        const tempExercises=this.state.exercises.map((exercise,index)=>{
-            if(index===this.state.indexOfExeToEdit){
+        const editedExercise=exerciseToEdit;
+        const tempExercises=exercises.map((exercise,index)=>{
+            if(index===indexOfExeToEdit){
                 return editedExercise;
             }else {
                 return exercise;
             }
         });
         console.log('EditedExercise',tempExercises);
-        this.setState({exercises:tempExercises, editExercise:false});
+        setExercises(tempExercises);
+        setEditExercise(false);
     };
 
-    render() {
-        return (
-            <FitnessContext.Provider value={{...this.state,
-                                            onSelectHandler:this.onSelectHandler,
-                                            onSelectExerciseHandler:this.onSelectExerciseHandler,
-                                            OpenModalHandler:this.OpenModalHandler,
-                                            addExerciseTitle:this.addExerciseTitle,
-                                            addExerciseMuscle:this.addExerciseMuscle,
-                                            addExerciseDescription:this.addExerciseDescription,
-                                            addNewExerciseToList:this.addNewExerciseToList,
-                                            deleteExerciseFromList:this.deleteExerciseFromList,
-                                            onEditExercise:this.onEditExercise,
-                                            editExerciseTitle:this.editExerciseTitle,
-                                            editExerciseMuscle:this.editExerciseMuscle,
-                                            editExerciseDescription:this.editExerciseDescription,
-                                            saveEditedExercise:this.saveEditedExercise}}>
-                {this.props.children}
-            </FitnessContext.Provider>
-        );
-    }
-}
+    return (
+        <FitnessContext.Provider value={{myState,
+            onSelectHandler:onSelectHandler,
+            onSelectExerciseHandler:onSelectExerciseHandler,
+            OpenModalHandler:OpenModalHandler,
+            addExerciseTitle:addExerciseTitle,
+            addExerciseMuscle:addExerciseMuscle,
+            addExerciseDescription:addExerciseDescription,
+            addNewExerciseToList:addNewExerciseToList,
+            deleteExerciseFromList:deleteExerciseFromList,
+            onEditExercise:onEditExercise,
+            editExerciseTitle:editExerciseTitle,
+            editExerciseMuscle:editExerciseMuscle,
+            editExerciseDescription:editExerciseDescription,
+            saveEditedExercise:saveEditedExercise}}>
+            {props.children}
+        </FitnessContext.Provider>
+    );
+};
 
 export {ContexProvider, FitnessContext};

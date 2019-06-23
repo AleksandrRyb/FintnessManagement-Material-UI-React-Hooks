@@ -31,7 +31,7 @@ const AddExercise=(props)=>{
     const classes = useStyles();
 
     const context=useContext(FitnessContext);
-    const { muscles, OpenCreateExerciseModal, addedExercise:{ title, description,muscle}}=context;
+    const { muscles, OpenCreateExerciseModal, addedExercise:{title, description,muscle}}=context.myState;
 
     const validateAndAddExercise=()=>{
         console.log('validator')
