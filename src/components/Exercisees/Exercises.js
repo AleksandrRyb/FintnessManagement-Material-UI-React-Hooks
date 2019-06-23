@@ -31,10 +31,10 @@ const Exercises =(props)=>{
     const EditFormClasses = useEditFormStyles();
 
     const context=useContext(FitnessContext);
-    const {selectedMuscle, exercises, selectedExercise, editExercise, muscles}=context.myState;
+    const {selectedMuscle, exercises, selectedExercise, editExercise, muscles, addBtnActive}=context;
 
     if(editExercise){
-        var { exerciseToEdit:{title, description, muscle} }=context.myState;
+        var { exerciseToEdit:{title, description, muscle} }=context;
     }
 
     useEffect(()=>{
@@ -78,9 +78,9 @@ const Exercises =(props)=>{
                 </Paper>
             </Grid>
             <Grid item xs={8} sm={8} md={8} lg={8} xl={8}>
-                { editExercise? ( <ReusableForm editExercise
+                { editExercise? ( <ReusableForm toEdit
                                                 classes={EditFormClasses}
-                                                addedExercise={{muscles, title, description, muscle}}
+                                                addedExercise={{muscles, title, description, muscle, addBtnActive}}
                                                 onTitleTextFieldHandler={context.editExerciseTitle}
                                                 onMuscleNativeSelectHandler={context.editExerciseMuscle}
                                                 onDcpTitleTextFieldHandler={context.editExerciseDescription}

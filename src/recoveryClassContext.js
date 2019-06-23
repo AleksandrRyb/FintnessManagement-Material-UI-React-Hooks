@@ -46,7 +46,7 @@ class ContexProvider extends Component{
     onSelectExerciseHandler=(id)=>{
         this.state.exercises.forEach(exercise=>{
             if(exercise.id===id){
-                this.setState({selectedExercise:exercise})
+                this.setState({selectedExercise:exercise, editExercise:false})
             }
         })
     };
@@ -54,6 +54,7 @@ class ContexProvider extends Component{
     OpenModalHandler=()=>{
         this.setState({OpenCreateExerciseModal:!this.state.OpenCreateExerciseModal});
     };
+
 
     addExerciseTitle=(event)=>{
         event.preventDefault();
@@ -67,12 +68,13 @@ class ContexProvider extends Component{
     addExerciseDescription=(event)=>{
         this.setState({ addedExercise:{...this.state.addedExercise, description:event.target.value} });
     };
-
     addNewExerciseToList=()=>{
         this.setState({exercises:[...this.state.exercises, this.state.addedExercise],  OpenCreateExerciseModal:false},
             ()=>{ this.setState({addedExercise:{id:'', title: '',description: '',muscle: ''} });
             });
     };
+
+
     deleteExerciseFromList=(id)=>{
         let tempExercises=[];
         this.state.exercises.forEach(exercise=>{
@@ -81,11 +83,9 @@ class ContexProvider extends Component{
         });//This safe copying of exercises into tempExercises was unnecessary because we are using "filter()" later anyway which don't changes the original array
         tempExercises=tempExercises.filter(exercise=>exercise.id!==id);
 
-        if(tempExercises.length>0){
-            this.setState({exercises:tempExercises});
-        }else{
-            this.setState({exercises:tempExercises, selectedExercise:null});
-        }
+        this.setState({exercises:tempExercises, editExercise:false},()=>this.setState({
+            selectedExercise:null, exerciseToEdit:null, indexOfExeToEdit:''})
+        );
     };
 
 
@@ -123,8 +123,9 @@ class ContexProvider extends Component{
             }
         });
         console.log('EditedExercise',tempExercises);
-        this.setState({exercises:tempExercises, editExercise:false});
+        this.setState({exercises:tempExercises, editExercise:false, exerciseToEdit:null});
     };
+
 
     render() {
         return (

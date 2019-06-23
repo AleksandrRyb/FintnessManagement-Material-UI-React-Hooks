@@ -31,13 +31,8 @@ const AddExercise=(props)=>{
     const classes = useStyles();
 
     const context=useContext(FitnessContext);
-    const { muscles, OpenCreateExerciseModal, addedExercise:{title, description,muscle}}=context.myState;
+    const { muscles, OpenCreateExerciseModal, addBtnActive, addedExercise:{title, description,muscle}}=context;
 
-    const validateAndAddExercise=()=>{
-        console.log('validator')
-
-        context.addNewExerciseToList();
-    };
 
     return (
         <React.Fragment>
@@ -52,12 +47,13 @@ const AddExercise=(props)=>{
                     <DialogContentText>
                       Please fill out the form below:
                     </DialogContentText>
-                    <ReusableForm classes={classes}
-                                  addedExercise={{muscles, title, description, muscle}}
+                    <ReusableForm toAdd
+                                  classes={classes}
+                                  addedExercise={{muscles, title, description, muscle, addBtnActive}}
                                   onTitleTextFieldHandler={context.addExerciseTitle}
                                   onMuscleNativeSelectHandler={context.addExerciseMuscle}
                                   onDcpTitleTextFieldHandler={context.addExerciseDescription}
-                                  onButtonHandler={validateAndAddExercise}/>
+                                  onButtonHandler={context.addNewExerciseToList();}/>
                 </DialogContent>
             </Dialog>
         </React.Fragment>
