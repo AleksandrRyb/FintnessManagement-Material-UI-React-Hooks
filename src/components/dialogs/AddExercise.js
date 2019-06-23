@@ -53,7 +53,7 @@ const AddExercise=(props)=>{
                                   onTitleTextFieldHandler={context.addExerciseTitle}
                                   onMuscleNativeSelectHandler={context.addExerciseMuscle}
                                   onDcpTitleTextFieldHandler={context.addExerciseDescription}
-                                  onButtonHandler={context.addNewExerciseToList();}/>
+                                  onButtonHandler={context.addNewExerciseToList}/>
                 </DialogContent>
             </Dialog>
         </React.Fragment>

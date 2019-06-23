@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {muscles as m, exercises as e} from './store';
 
 const FitnessContext=React.createContext();
@@ -12,11 +12,13 @@ const ContexProvider=(props)=>{
     const [selectedExercise, setSelectedExercise]=useState(null);
     const [OpenCreateExerciseModal, setOpenCreateExerciseModal]=useState(false);
     const [addedExercise, setAddedExercise]=useState({id:'', title: '', description: '', muscle: ''});
+    const [addBtnActive, setAddBtnActive]=useState(true);
     const [editExercise, setEditExercise]=useState(false);
-    const [exerciseToEdit, setExerciseToEdit]=useState(null);
+    const [exerciseToEdit, setExerciseToEdit]=useState({});
     const [indexOfExeToEdit, setIndexOfExeToEdit]=useState('');
     //setTodoList(prevTodoList => prevTodoList.concat(todoItem));
-    const myState={ muscles,
+    const myState={
+        muscles,
         exercises,
         selectedMuscle,
         footerMenuToSelect,
@@ -25,7 +27,8 @@ const ContexProvider=(props)=>{
         addedExercise,
         editExercise,
         exerciseToEdit,
-        indexOfExeToEdit
+        indexOfExeToEdit,
+        addBtnActive
     };
 
     const onSelectHandler=(index)=>{
@@ -56,51 +59,55 @@ const ContexProvider=(props)=>{
         })
     };
 
-    const OpenModalHandler=()=>{
-        setOpenCreateExerciseModal(!OpenCreateExerciseModal)
-    };
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const OpenModalHandler=()=>{
+        setOpenCreateExerciseModal(!OpenCreateExerciseModal);
+        setAddBtnActive(true);
+    };
     const addExerciseTitle=(event)=>{
         event.preventDefault();
         let tempTitle=event.target.value;
         let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
 
         setAddedExercise({...addedExercise, title:tempTitle, id:tempId});
+        //validateAddedExercise(true);//will not work immediately properly because of Asyn state update use "useEffect()" instead
     };
     const addExerciseMuscle=(event)=>{
         setAddedExercise({...addedExercise, muscle:event.target.value});
+        //validateAddedExercise(true);
     };
     const addExerciseDescription=(event)=>{
         setAddedExercise({...addedExercise, description:event.target.value});
+        //validateAddedExercise(true);
     };
-
+    //Because we cannot use callback funtion like this.setState for doing Asynchoronous tasks here like checking validity after updating the each property of "addedExercise" object so we can use useEffect() to check the  validity each time anything in "addedExercise" changes;
+    useEffect(()=>{
+        validateAddedExercise(true);
+    },[addedExercise]);
     const addNewExerciseToList=()=>{
         setExercises(prevExercise=>prevExercise.concat(addedExercise));
-        console.log('Exercises',exercises);
         setOpenCreateExerciseModal(false);
         setAddedExercise({id:'', title: '',description: '',muscle: ''});
     };
-    const deleteExerciseFromList=(id)=>{
-        let tempExercises=[];
-        exercises.forEach(exercise=>{
-            const tempExerc={...exercise};
-            tempExercises=[...tempExercises, tempExerc];
-        });//This safe copying of exercises into tempExercises was unnecessary because we are using "filter()" later anyway which don't changes the original array
-        tempExercises=tempExercises.filter(exercise=>exercise.id!==id);
 
-        //if(tempExercises.length>0){
-            setExercises(tempExercises);
-            setEditExercise(false);
-            setSelectedExercise(null);
-            setExerciseToEdit(null);
-            setIndexOfExeToEdit('');
-        //}else{
-          //  setExercises(tempExercises);
-            //setSelectedExercise(null);
-        //}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    const validateAddedExercise=(toAddNew)=>{
+        if(toAddNew){
+            var {title, muscle, description}=addedExercise;
+        }else{
+            var {title, muscle, description}=exerciseToEdit;
+        }
+
+        if(title!=="" && muscle!=="" && description!==""){
+            setAddBtnActive(false);
+        }else{
+            setAddBtnActive(true);
+        }
     };
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const onEditExercise=(index)=>{
         let exerciseToEdit={};
         exercises.forEach((exercise,indx)=>{
@@ -111,22 +118,28 @@ const ContexProvider=(props)=>{
         setExerciseToEdit(exerciseToEdit);
         setIndexOfExeToEdit(index);
         setEditExercise(true);
-        console.log('ToeDit',exerciseToEdit.id);
+        setAddBtnActive(true);
     };
     const editExerciseTitle=(event)=>{
         let tempTitle=event.target.value;
         let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
 
-        setExerciseToEdit({...exerciseToEdit, title:tempTitle, id:tempId})
+        setExerciseToEdit({...exerciseToEdit, title:tempTitle, id:tempId});
+        //validateAddedExercise();
     };
     const editExerciseMuscle=(event)=>{
-        setExerciseToEdit({...exerciseToEdit, muscle:event.target.value})
+        setExerciseToEdit({...exerciseToEdit, muscle:event.target.value});
+        //validateAddedExercise();
     };
     const editExerciseDescription=(event)=>{
-        setExerciseToEdit({...exerciseToEdit,  description:event.target.value})
+        setExerciseToEdit({...exerciseToEdit,  description:event.target.value});
+        //validateAddedExercise();
     };
+    //Because we cannot use callback funtion like this.setState for doing Asynchoronous tasks here like checking validity after updating the each property of "exerciseToEdit" object so we can use useEffect() to check the  validity each time anything in "exerciseToEdit" changes;
+    useEffect(()=>{
+        validateAddedExercise();
+    },[exerciseToEdit]);
     const saveEditedExercise=()=>{
-        //validate
         const editedExercise=exerciseToEdit;
         const tempExercises=exercises.map((exercise,index)=>{
             if(index===indexOfExeToEdit){
@@ -135,12 +148,26 @@ const ContexProvider=(props)=>{
                 return exercise;
             }
         });
-        console.log('EditedExercise',tempExercises);
         setExercises(tempExercises);
         setEditExercise(false);
         setExerciseToEdit(null);
     };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const deleteExerciseFromList=(id)=>{
+        let tempExercises=[];
+        exercises.forEach(exercise=>{
+            const tempExerc={...exercise};
+            tempExercises=[...tempExercises, tempExerc];
+        });//This safe copying of exercises into tempExercises was unnecessary because we are using "filter()" later anyway which don't changes the original array
+        tempExercises=tempExercises.filter(exercise=>exercise.id!==id);
 
+        setExercises(tempExercises);
+        setEditExercise(false);
+        setSelectedExercise(null);
+        setExerciseToEdit(null);
+        setIndexOfExeToEdit('');
+    };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     return (
         <FitnessContext.Provider value={{...myState,
             onSelectHandler:onSelectHandler,

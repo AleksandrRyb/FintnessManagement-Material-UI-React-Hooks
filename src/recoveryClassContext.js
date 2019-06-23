@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import {muscles, exercises} from './store';
 
 const FitnessContext=React.createContext();
@@ -18,6 +18,7 @@ class ContexProvider extends Component{
             description: '',
             muscle: ''
         },
+        addBtnActive:true,
         editExercise:false,
         exerciseToEdit:null,
         indexOfExeToEdit:'',
@@ -50,23 +51,24 @@ class ContexProvider extends Component{
             }
         })
     };
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     OpenModalHandler=()=>{
-        this.setState({OpenCreateExerciseModal:!this.state.OpenCreateExerciseModal});
+        this.setState({OpenCreateExerciseModal:!this.state.OpenCreateExerciseModal, addBtnActive:true});
     };
-
-
     addExerciseTitle=(event)=>{
         event.preventDefault();
         let tempTitle=event.target.value;
         let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
-        this.setState({ addedExercise:{...this.state.addedExercise, title:tempTitle, id:tempId} });
+        this.setState({ addedExercise:{...this.state.addedExercise, title:tempTitle, id:tempId} },
+            ()=>this.validateAddedExercise(true) );
     };
     addExerciseMuscle=(event)=>{
-        this.setState({ addedExercise:{...this.state.addedExercise, muscle:event.target.value} });
+        this.setState({ addedExercise:{...this.state.addedExercise, muscle:event.target.value} },
+            ()=>this.validateAddedExercise(true) );
     };
     addExerciseDescription=(event)=>{
-        this.setState({ addedExercise:{...this.state.addedExercise, description:event.target.value} });
+        this.setState({ addedExercise:{...this.state.addedExercise, description:event.target.value} },
+            ()=>this.validateAddedExercise(true) );
     };
     addNewExerciseToList=()=>{
         this.setState({exercises:[...this.state.exercises, this.state.addedExercise],  OpenCreateExerciseModal:false},
@@ -74,7 +76,60 @@ class ContexProvider extends Component{
             });
     };
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    validateAddedExercise=(toAddNew)=>{
+        if(toAddNew){
+            var {title, muscle, description}=this.state.addedExercise;
+        }else{
+            var {title, muscle, description}=this.state.exerciseToEdit;
+        }
 
+        if(title!=="" && muscle!=="" && description!==""){
+            this.setState({addBtnActive:false});
+        }else{
+            this.setState({addBtnActive:true});
+        }
+    };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    onEditExercise=(index)=>{
+        let exerciseToEdit={};
+        this.state.exercises.forEach((exercise,indx)=>{
+            if(indx===index){
+                exerciseToEdit={...exercise}
+            }
+        });
+        this.setState({exerciseToEdit:exerciseToEdit, indexOfExeToEdit:index}, ()=>{
+            this.setState({editExercise:true, addBtnActive:false})
+        });
+    };
+    editExerciseTitle=(event)=>{
+        let tempTitle=event.target.value;
+        let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
+        this.setState({exerciseToEdit:{...this.state.exerciseToEdit, title:tempTitle, id:tempId}},
+            ()=>this.validateAddedExercise());
+    };
+    editExerciseMuscle=(event)=>{
+        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, muscle:event.target.value} },
+            ()=>this.validateAddedExercise());
+    };
+    editExerciseDescription=(event)=>{
+        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, description:event.target.value} },
+            ()=>this.validateAddedExercise());
+    };
+    saveEditedExercise=()=>{
+        const editedExercise=this.state.exerciseToEdit;
+        const tempExercises=this.state.exercises.map((exercise,index)=>{
+            if(index===this.state.indexOfExeToEdit){
+                return editedExercise;
+            }else {
+                return exercise;
+            }
+        });
+        console.log('EditedExercise',tempExercises);
+        this.setState({exercises:tempExercises, editExercise:false, exerciseToEdit:null});
+    };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     deleteExerciseFromList=(id)=>{
         let tempExercises=[];
         this.state.exercises.forEach(exercise=>{
@@ -87,45 +142,7 @@ class ContexProvider extends Component{
             selectedExercise:null, exerciseToEdit:null, indexOfExeToEdit:''})
         );
     };
-
-
-    onEditExercise=(index)=>{
-        let exerciseToEdit={};
-        this.state.exercises.forEach((exercise,indx)=>{
-            if(indx===index){
-                exerciseToEdit={...exercise}
-            }
-        });
-        this.setState({exerciseToEdit:exerciseToEdit, indexOfExeToEdit:index}, ()=>{
-            this.setState({editExercise:true})
-        });
-        console.log('ToeDit',exerciseToEdit.id);
-    };
-    editExerciseTitle=(event)=>{
-        let tempTitle=event.target.value;
-        let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
-        this.setState({exerciseToEdit:{...this.state.exerciseToEdit, title:tempTitle, id:tempId}})
-    };
-    editExerciseMuscle=(event)=>{
-        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, muscle:event.target.value} });
-    };
-    editExerciseDescription=(event)=>{
-        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, description:event.target.value} });
-    };
-    saveEditedExercise=()=>{
-        //validate
-        const editedExercise=this.state.exerciseToEdit;
-        const tempExercises=this.state.exercises.map((exercise,index)=>{
-            if(index===this.state.indexOfExeToEdit){
-                return editedExercise;
-            }else {
-                return exercise;
-            }
-        });
-        console.log('EditedExercise',tempExercises);
-        this.setState({exercises:tempExercises, editExercise:false, exerciseToEdit:null});
-    };
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     render() {
         return (
