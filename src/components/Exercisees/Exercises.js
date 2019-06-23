@@ -1,21 +1,30 @@
 import React,{useContext, useEffect} from 'react';
-import {Grid, Paper, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, makeStyles} from '@material-ui/core';
+import {Grid, Paper, Typography, List,
+        ListItem, ListItemText, ListItemSecondaryAction,
+        IconButton} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import BorderColor from '@material-ui/icons/BorderColor';
 import {FitnessContext} from '../../contex';
 import ReusableForm from '../dialogs/ReusableForm';
+import { makeStyles } from '@material-ui/core/styles';//For functional Components
 
-
-const style={
-    Paper:{padding:20, marginTop:10, marginBottom:10, height:500, overflowY:'auto', marginLeft:0}
-};
 
 const useEditFormStyles=makeStyles(theme=>({
     formControl:{
         minWidth:'50em',
+    },
+    Paper:{
+        padding:20,
+        marginTop:10,
+        marginBottom:10,
+        height:500,
+        overflowY:'auto',
+        marginLeft:0
     }
 }));
-
+const style={
+    Paper:{padding:20, marginTop:10, marginBottom:10, height:500, overflowY:'auto', marginLeft:0}
+};
 
 const Exercises =(props)=>{
 
@@ -35,7 +44,7 @@ const Exercises =(props)=>{
     return (
         <Grid container>
             <Grid item xs={4} sm={4} md={4} lg={4} xl={4}>
-                <Paper style={style.Paper}>
+                <Paper className={EditFormClasses.Paper}>
                     {selectedMuscle.map(muscle=>{
                         return(
                             <React.Fragment key={muscle}>
@@ -77,7 +86,7 @@ const Exercises =(props)=>{
                                                 onDcpTitleTextFieldHandler={context.editExerciseDescription}
                                                 onButtonHandler={context.saveEditedExercise}/> ) :
                   ( <React.Fragment>
-                     <Paper style={style.Paper}>
+                     <Paper className={EditFormClasses.Paper}>
                         <Typography variant="h4" style={{marginTop:'20px'}}>
                             {selectedExercise? selectedExercise.title:'Welcome'}
                         </Typography>

@@ -2,8 +2,7 @@ import React from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Exercises from './components/Exercisees/Exercises';
-import {AppBar, Toolbar, IconButton, Typography, Button, Box} from '@material-ui/core';
-import {muscles, exercises} from './store';
+import {Box} from '@material-ui/core';
 
 const App=(props)=>{
 
