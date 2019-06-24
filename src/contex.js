@@ -150,7 +150,7 @@ const ContexProvider=(props)=>{
         });
         setExercises(tempExercises);
         setEditExercise(false);
-        setExerciseToEdit(null);
+        setExerciseToEdit({});
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const deleteExerciseFromList=(id)=>{
@@ -164,7 +164,7 @@ const ContexProvider=(props)=>{
         setExercises(tempExercises);
         setEditExercise(false);
         setSelectedExercise(null);
-        setExerciseToEdit(null);
+        setExerciseToEdit({});
         setIndexOfExeToEdit('');
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
