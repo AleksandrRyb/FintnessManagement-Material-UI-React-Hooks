@@ -12,6 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';//For functional Component
 const useEditFormStyles=makeStyles(theme=>({
     formControl:{
         minWidth:'50em',
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
     },
     Paper:{
         padding:20,
@@ -43,7 +45,7 @@ const Exercises =(props)=>{
 
     return (
         <Grid container>
-            <Grid item xs={4} sm={4} md={4} lg={4} xl={4}>
+            <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
                 <Paper className={EditFormClasses.Paper}>
                     {selectedMuscle.map(muscle=>{
                         return(
@@ -77,7 +79,7 @@ const Exercises =(props)=>{
                     }
                 </Paper>
             </Grid>
-            <Grid item xs={8} sm={8} md={8} lg={8} xl={8}>
+            <Grid item xs={12} sm={8} md={8} lg={8} xl={8}>
                 { editExercise? ( <ReusableForm toEdit
                                                 classes={EditFormClasses}
                                                 addedExercise={{muscles, title, description, muscle, addBtnActive, alreadyExists}}

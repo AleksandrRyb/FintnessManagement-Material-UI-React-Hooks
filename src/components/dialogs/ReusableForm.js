@@ -6,6 +6,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Input from '@material-ui/core/Input';
+import withWidth from '@material-ui/core/withWidth';
+
 
 
 
@@ -59,4 +61,4 @@ const ReusableForm = (props) => {
     );
 };
 
-export default ReusableForm;
+export default withWidth()(ReusableForm);

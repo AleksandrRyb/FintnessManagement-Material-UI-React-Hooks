@@ -20,7 +20,8 @@ const useStyles=makeStyles(theme=>({
         margin:1,
     },
     formControl:{
-        minWidth: 500,
+        minWidth: 500
+
     }
 }));
 

@@ -1,24 +1,23 @@
 import React, {useContext} from 'react';
 import {Paper, Tab, Tabs, Grid} from '@material-ui/core';
 import {FitnessContext} from '../contex';
+import withWidth from '@material-ui/core/withWidth';//this is a HOC we that raps the "Footer" comp and gives the "width" props which indicates current break point value of the screen
 
-const Footer = (props) => {
-
+const Footer = ({width}) => {
+    //console.log('width=',width);
     const context=useContext(FitnessContext);
     const { muscles, footerMenuToSelect}=context;
 
     return (
-        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-            <Paper>
-                <Tabs value={footerMenuToSelect}  indicatorColor="primary" textColor="primary" centered >
-                    <Tab label="All" onClick={()=>context.onSelectHandler(-1)}/>
-                    {muscles.map((muscle, index)=>{
-                        return <Tab label={muscle} key={muscle} onClick={()=>context.onSelectHandler(index)}></Tab>
-                    })}
-                </Tabs>
-            </Paper>
-        </Grid>
+        <Paper>
+            <Tabs value={footerMenuToSelect}  indicatorColor="primary" textColor="primary" centered={width!=='xs'} scrollButtons="on" variant="scrollable">
+                <Tab label="All" onClick={()=>context.onSelectHandler(-1)}/>
+                {muscles.map((muscle, index)=>{
+                    return <Tab label={muscle} key={muscle} onClick={()=>context.onSelectHandler(index)}></Tab>
+                })}
+            </Tabs>
+        </Paper>
     );
 };
 
-export default Footer;
+export default withWidth()(Footer);
