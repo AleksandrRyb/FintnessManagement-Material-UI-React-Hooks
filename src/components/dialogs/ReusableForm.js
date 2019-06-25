@@ -25,7 +25,7 @@ const ReusableForm = (props) => {
                 margin="normal"
                 required
             />
-            {alreadyExists? <p style={{color:'red'}}>Title already exists please use a unique one.</p>: ''}
+            {alreadyExists? <p style={{color:'red'}}>Title already exists please use an unique one</p>: ''}
             <br/>
             <FormControl>
                 <NativeSelect  className={props.classes.formControl}

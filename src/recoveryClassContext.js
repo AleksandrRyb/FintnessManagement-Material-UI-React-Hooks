@@ -22,6 +22,7 @@ class ContexProvider extends Component{
         editExercise:false,
         exerciseToEdit:null,
         indexOfExeToEdit:'',
+        alreadyExists:false,
     };
 
 
@@ -56,11 +57,27 @@ class ContexProvider extends Component{
         this.setState({OpenCreateExerciseModal:!this.state.OpenCreateExerciseModal, addBtnActive:true});
     };
     addExerciseTitle=(event)=>{
-        event.preventDefault();
         let tempTitle=event.target.value;
         let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
+
         this.setState({ addedExercise:{...this.state.addedExercise, title:tempTitle, id:tempId} },
             ()=>this.validateAddedExercise(true) );
+    };
+    onAddcheckExistance=(event)=>{
+        let tempId=event.target.value.replace(/ /g, '-').toLocaleLowerCase();
+        var existFlag=false;
+
+        this.state.exercises.forEach(exercise=>{
+            if(exercise.id===tempId){
+                existFlag=true;
+            }
+        });
+        if(existFlag){
+            this.setState({alreadyExists:true});
+        }
+        else{
+            this.setState({alreadyExists:false});
+        }
     };
     addExerciseMuscle=(event)=>{
         this.setState({ addedExercise:{...this.state.addedExercise, muscle:event.target.value} },
@@ -108,6 +125,26 @@ class ContexProvider extends Component{
         let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
         this.setState({exerciseToEdit:{...this.state.exerciseToEdit, title:tempTitle, id:tempId}},
             ()=>this.validateAddedExercise());
+    };
+    onEditcheckExistance=(event)=>{
+        let tempId=event.target.value.replace(/ /g, '-').toLocaleLowerCase();
+        var editFlag=false;
+        this.state.exercises.forEach( (exercise)=>{
+            if(exercise.id===tempId){
+                editFlag=true;
+            }
+        });
+        if(this.state.exercises[this.state.indexOfExeToEdit].id===tempId){
+            console.log('this.state.exerciseToEdit.id=',this.state.exerciseToEdit.id,'tempId',tempId);
+            editFlag=false;
+        }
+
+        if(editFlag){
+            this.setState({alreadyExists:true});
+        }
+        else{
+            this.setState({alreadyExists:false});
+        }
     };
     editExerciseMuscle=(event)=>{
         this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, muscle:event.target.value} },
@@ -159,7 +196,9 @@ class ContexProvider extends Component{
                 editExerciseTitle:this.editExerciseTitle,
                 editExerciseMuscle:this.editExerciseMuscle,
                 editExerciseDescription:this.editExerciseDescription,
-                saveEditedExercise:this.saveEditedExercise}}>
+                saveEditedExercise:this.saveEditedExercise,
+                onEditcheckExistance:this.onEditcheckExistance,
+                onAddcheckExistance:this.onAddcheckExistance}}>
                 {this.props.children}
             </FitnessContext.Provider>
         );
