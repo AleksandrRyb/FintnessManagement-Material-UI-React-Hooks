@@ -31,7 +31,7 @@ const Exercises =(props)=>{
     const EditFormClasses = useEditFormStyles();
 
     const context=useContext(FitnessContext);
-    const {selectedMuscle, exercises, selectedExercise, editExercise, muscles, addBtnActive}=context;
+    const {selectedMuscle, exercises, selectedExercise, editExercise, muscles, addBtnActive, alreadyExists}=context;
 
     if(editExercise){
         var { exerciseToEdit:{title, description, muscle} }=context;
@@ -80,8 +80,9 @@ const Exercises =(props)=>{
             <Grid item xs={8} sm={8} md={8} lg={8} xl={8}>
                 { editExercise? ( <ReusableForm toEdit
                                                 classes={EditFormClasses}
-                                                addedExercise={{muscles, title, description, muscle, addBtnActive}}
+                                                addedExercise={{muscles, title, description, muscle, addBtnActive, alreadyExists}}
                                                 onTitleTextFieldHandler={context.editExerciseTitle}
+                                                onCheckExistance={context.onEditcheckExistance}
                                                 onMuscleNativeSelectHandler={context.editExerciseMuscle}
                                                 onDcpTitleTextFieldHandler={context.editExerciseDescription}
                                                 onButtonHandler={context.saveEditedExercise}/> ) :

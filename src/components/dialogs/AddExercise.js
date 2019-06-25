@@ -31,7 +31,7 @@ const AddExercise=(props)=>{
     const classes = useStyles();
 
     const context=useContext(FitnessContext);
-    const { muscles, OpenCreateExerciseModal, addBtnActive, addedExercise:{title, description,muscle}}=context;
+    const { muscles, OpenCreateExerciseModal, addBtnActive, alreadyExists, addedExercise:{title, description,muscle}}=context;
 
 
     return (
@@ -49,8 +49,9 @@ const AddExercise=(props)=>{
                     </DialogContentText>
                     <ReusableForm toAdd
                                   classes={classes}
-                                  addedExercise={{muscles, title, description, muscle, addBtnActive}}
+                                  addedExercise={{muscles, title, description, muscle, addBtnActive, alreadyExists}}
                                   onTitleTextFieldHandler={context.addExerciseTitle}
+                                  onCheckExistance={context.onAddcheckExistance}
                                   onMuscleNativeSelectHandler={context.addExerciseMuscle}
                                   onDcpTitleTextFieldHandler={context.addExerciseDescription}
                                   onButtonHandler={context.addNewExerciseToList}/>

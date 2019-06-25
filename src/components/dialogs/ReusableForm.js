@@ -11,7 +11,7 @@ import Input from '@material-ui/core/Input';
 
 const ReusableForm = (props) => {
 
-    const {muscles, title, description, muscle, addBtnActive}=props.addedExercise;
+    const {muscles, title, description, muscle, addBtnActive, alreadyExists}=props.addedExercise;
 
     return (
         <form>
@@ -21,9 +21,11 @@ const ReusableForm = (props) => {
                 className={props.classes.formControl}
                 value={title}
                 onChange={(event)=>props.onTitleTextFieldHandler(event)}
+                onInput={(event)=>props.onCheckExistance(event)}
                 margin="normal"
                 required
             />
+            {alreadyExists? <p style={{color:'red'}}>Title already exists please use a unique one.</p>: ''}
             <br/>
             <FormControl>
                 <NativeSelect  className={props.classes.formControl}
@@ -49,8 +51,8 @@ const ReusableForm = (props) => {
                 required
             />
             <DialogActions>
-                <Button variant="contained" color="primary" onClick={props.onButtonHandler} disabled={addBtnActive}>
-                    {addBtnActive? 'Please feel all the fields first': (props.toAdd? 'Add':'Save')}
+                <Button variant="contained" color="primary" onClick={props.onButtonHandler} disabled={addBtnActive || alreadyExists}>
+                    {addBtnActive || alreadyExists ? 'Please feel all the fields first': (props.toAdd? 'Add':'Save')}
                 </Button>
             </DialogActions>
         </form>
