@@ -1,230 +1,233 @@
-import React, {useEffect, useState} from 'react';
-import {muscles as m, exercises as e} from './store';
+import React, {Component} from 'react';
+import {muscles, exercises} from './store';
+import axios from 'axios';
 
 const FitnessContext=React.createContext();
 
-const ContexProvider=(props)=>{
+class ContexProvider extends Component{
 
-    const [muscles, setMuscles]=useState(m);
-    const [exercises, setExercises]=useState(e);
-    const [selectedMuscle, setSelectedMuscle]=useState(m);
-    const [footerMenuToSelect, setFooterMenuToSelect]=useState(0);
-    const [selectedExercise, setSelectedExercise]=useState(null);
-    const [OpenCreateExerciseModal, setOpenCreateExerciseModal]=useState(false);
-    const [addedExercise, setAddedExercise]=useState({id:'', title: '', description: '', muscle: ''});
-    const [addBtnActive, setAddBtnActive]=useState(true);
-    const [editExercise, setEditExercise]=useState(false);
-    const [exerciseToEdit, setExerciseToEdit]=useState({});
-    const [indexOfExeToEdit, setIndexOfExeToEdit]=useState('');
-    const [alreadyExists, setAlreadyExists]=useState(false);
-    //setTodoList(prevTodoList => prevTodoList.concat(todoItem));
-    const myState={
-        muscles,
-        exercises,
-        selectedMuscle,
-        footerMenuToSelect,
-        selectedExercise,
-        OpenCreateExerciseModal,
-        addedExercise,
-        editExercise,
-        exerciseToEdit,
-        indexOfExeToEdit,
-        addBtnActive,
-        alreadyExists
+    state={
+        muscles:[],
+        exercises:[],
+        selectedMuscle:[],
+        footerMenuToSelect:0,
+        selectedExercise:null,
+        OpenCreateExerciseModal:false,
+        addedExercise:{
+            id:'',
+            title: '',
+            description: '',
+            muscle: ''
+        },
+        addBtnActive:true,
+        editExercise:false,
+        exerciseToEdit:null,
+        indexOfExeToEdit:'',
+        alreadyExists:false,
     };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    onLoadData=()=>{
+        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/muscles.json')
+            .then(res=>{
+                this.setState({muscles:res.data, selectedMuscle:res.data});
+                    console.log(res);
+        }).catch(err=>console.log(err));
 
-    const onSelectHandler=(index)=>{
+        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json')
+            .then(res=>{
+                this.setState({exercises:res.data});
+                console.log(res);
+            }).catch(err=>console.log(err));
+    };
+    onSaveData=()=>{
+        axios.put('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json', this.state.exercises)
+            .then(res=>{
+                        console.log(res);
+        }).catch(err=>console.log(err));
+    };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    onSelectHandler=(index)=>{
         let temSelectedMuscle=[];
         let tempFooterMenuSelection=0;
 
         if(index < 0){
-            temSelectedMuscle=muscles;
+            temSelectedMuscle=this.state.muscles;
             tempFooterMenuSelection=0;
         }else {
-            muscles.forEach((muscle, ind)=>{
+            this.state.muscles.forEach((muscle, ind)=>{
                 if(ind===index){
                     temSelectedMuscle.push(muscle);
                 }
             });
             tempFooterMenuSelection=index+1;
         }
-        setSelectedMuscle(temSelectedMuscle);
-        setFooterMenuToSelect(tempFooterMenuSelection);
+
+        this.setState({selectedMuscle:temSelectedMuscle, footerMenuToSelect:tempFooterMenuSelection})
     };
 
-    const onSelectExerciseHandler=(id)=>{
-        exercises.forEach(exercise=>{
+    onSelectExerciseHandler=(id)=>{
+        this.state.exercises.forEach(exercise=>{
             if(exercise.id===id){
-                setSelectedExercise(exercise);
-                setEditExercise(false);
+                this.setState({selectedExercise:exercise, editExercise:false})
             }
         })
     };
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const OpenModalHandler=()=>{
-        setOpenCreateExerciseModal(!OpenCreateExerciseModal);
-        setAddBtnActive(true);
+    OpenModalHandler=()=>{
+        this.setState({OpenCreateExerciseModal:!this.state.OpenCreateExerciseModal, addBtnActive:true});
     };
-    const addExerciseTitle=(event)=>{
-        event.preventDefault();
+    addExerciseTitle=(event)=>{
         let tempTitle=event.target.value;
         let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
 
-        setAddedExercise({...addedExercise, title:tempTitle, id:tempId});
-        //validateAddedExercise(true);//will not work immediately properly because of Asyn state update use "useEffect()" instead
+        this.setState({ addedExercise:{...this.state.addedExercise, title:tempTitle, id:tempId} },
+            ()=>this.validateAddedExercise(true) );
     };
-    const  onAddcheckExistance=(event)=>{
+    onAddcheckExistance=(event)=>{
         let tempId=event.target.value.replace(/ /g, '-').toLocaleLowerCase();
         var existFlag=false;
 
-        exercises.forEach(exercise=>{
+        this.state.exercises.forEach(exercise=>{
             if(exercise.id===tempId){
                 existFlag=true;
             }
         });
         if(existFlag){
-            setAlreadyExists(true);
+            this.setState({alreadyExists:true});
         }
         else{
-            setAlreadyExists(false);
+            this.setState({alreadyExists:false});
         }
     };
-    const addExerciseMuscle=(event)=>{
-        setAddedExercise({...addedExercise, muscle:event.target.value});
-        //validateAddedExercise(true);
+    addExerciseMuscle=(event)=>{
+        this.setState({ addedExercise:{...this.state.addedExercise, muscle:event.target.value} },
+            ()=>this.validateAddedExercise(true) );
     };
-    const addExerciseDescription=(event)=>{
-        setAddedExercise({...addedExercise, description:event.target.value});
-        //validateAddedExercise(true);
+    addExerciseDescription=(event)=>{
+        this.setState({ addedExercise:{...this.state.addedExercise, description:event.target.value} },
+            ()=>this.validateAddedExercise(true) );
     };
-    //Because we cannot use callback funtion like this.setState for doing Asynchoronous tasks here like checking validity after updating the each property of "addedExercise" object so we can use useEffect() to check the  validity each time anything in "addedExercise" changes;
-    useEffect(()=>{
-        validateAddedExercise(true);
-    },[addedExercise]);
-    const addNewExerciseToList=()=>{
-        setExercises(prevExercise=>prevExercise.concat(addedExercise));
-        setOpenCreateExerciseModal(false);
-        setAddedExercise({id:'', title: '',description: '',muscle: ''});
+    addNewExerciseToList=()=>{
+        this.setState({exercises:[...this.state.exercises, this.state.addedExercise],  OpenCreateExerciseModal:false},
+            ()=>{ this.setState({addedExercise:{id:'', title: '',description: '',muscle: ''} }, ()=>{
+                    this.onSaveData();
+            });
+        });
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    const validateAddedExercise=(toAddNew)=>{
+    validateAddedExercise=(toAddNew)=>{
         if(toAddNew){
-            var {title, muscle, description}=addedExercise;
+            var {title, muscle, description}=this.state.addedExercise;
         }else{
-            var {title, muscle, description}=exerciseToEdit;
+            var {title, muscle, description}=this.state.exerciseToEdit;
         }
 
         if(title!=="" && muscle!=="" && description!==""){
-            setAddBtnActive(false);
+            this.setState({addBtnActive:false});
         }else{
-            setAddBtnActive(true);
+            this.setState({addBtnActive:true});
         }
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const onEditExercise=(index)=>{
+    onEditExercise=(index)=>{
         let exerciseToEdit={};
-        exercises.forEach((exercise,indx)=>{
+        this.state.exercises.forEach((exercise,indx)=>{
             if(indx===index){
                 exerciseToEdit={...exercise}
             }
         });
-        setExerciseToEdit(exerciseToEdit);
-        setIndexOfExeToEdit(index);
-        setEditExercise(true);
-        setAddBtnActive(true);
+        this.setState({exerciseToEdit:exerciseToEdit, indexOfExeToEdit:index}, ()=>{
+            this.setState({editExercise:true, addBtnActive:false})
+        });
     };
-    const editExerciseTitle=(event)=>{
+    editExerciseTitle=(event)=>{
         let tempTitle=event.target.value;
         let tempId=tempTitle.replace(/ /g, '-').toLocaleLowerCase();
-
-        setExerciseToEdit({...exerciseToEdit, title:tempTitle, id:tempId});
-        //validateAddedExercise();
+        this.setState({exerciseToEdit:{...this.state.exerciseToEdit, title:tempTitle, id:tempId}},
+            ()=>this.validateAddedExercise());
     };
-    const onEditcheckExistance=(event)=>{
+    onEditcheckExistance=(event)=>{
         let tempId=event.target.value.replace(/ /g, '-').toLocaleLowerCase();
         var editFlag=false;
-        exercises.forEach( (exercise)=>{
+        this.state.exercises.forEach( (exercise)=>{
             if(exercise.id===tempId){
                 editFlag=true;
             }
         });
-        if(exercises[indexOfExeToEdit].id===tempId){
+        if(this.state.exercises[this.state.indexOfExeToEdit].id===tempId){
             editFlag=false;
         }
 
         if(editFlag){
-            setAlreadyExists(true);
+            this.setState({alreadyExists:true});
         }
         else{
-            setAlreadyExists(false);
+            this.setState({alreadyExists:false});
         }
     };
-    const editExerciseMuscle=(event)=>{
-        setExerciseToEdit({...exerciseToEdit, muscle:event.target.value});
-        //validateAddedExercise();
+    editExerciseMuscle=(event)=>{
+        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, muscle:event.target.value} },
+            ()=>this.validateAddedExercise());
     };
-    const editExerciseDescription=(event)=>{
-        setExerciseToEdit({...exerciseToEdit,  description:event.target.value});
-        //validateAddedExercise();
+    editExerciseDescription=(event)=>{
+        this.setState({ exerciseToEdit:{...this.state.exerciseToEdit, description:event.target.value} },
+            ()=>this.validateAddedExercise());
     };
-    //Because we cannot use callback funtion like this.setState for doing Asynchoronous tasks here like checking validity after updating the each property of "exerciseToEdit" object so we can use useEffect() to check the  validity each time anything in "exerciseToEdit" changes;
-    useEffect(()=>{
-        validateAddedExercise();
-    },[exerciseToEdit]);
-    const saveEditedExercise=()=>{
-        const editedExercise=exerciseToEdit;
-        const tempExercises=exercises.map((exercise,index)=>{
-            if(index===indexOfExeToEdit){
+    saveEditedExercise=()=>{
+        const editedExercise=this.state.exerciseToEdit;
+        const tempExercises=this.state.exercises.map((exercise,index)=>{
+            if(index===this.state.indexOfExeToEdit){
                 return editedExercise;
             }else {
                 return exercise;
             }
         });
-        setExercises(tempExercises);
-        setEditExercise(false);
-        setExerciseToEdit({});
+        this.setState({exercises:tempExercises, editExercise:false, exerciseToEdit:null}, ()=>{
+            this.onSaveData();
+        });
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const deleteExerciseFromList=(id)=>{
+    deleteExerciseFromList=(id)=>{
         let tempExercises=[];
-        exercises.forEach(exercise=>{
+        this.state.exercises.forEach(exercise=>{
             const tempExerc={...exercise};
             tempExercises=[...tempExercises, tempExerc];
         });//This safe copying of exercises into tempExercises was unnecessary because we are using "filter()" later anyway which don't changes the original array
         tempExercises=tempExercises.filter(exercise=>exercise.id!==id);
 
-        setExercises(tempExercises);
-        setEditExercise(false);
-        setSelectedExercise(null);
-        setExerciseToEdit({});
-        setIndexOfExeToEdit('');
+        this.setState({exercises:tempExercises, editExercise:false},()=>this.setState({
+            selectedExercise:null, exerciseToEdit:null, indexOfExeToEdit:''}, ()=>{
+                this.onSaveData();console.log('working');
+            })
+        );
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    return (
-        <FitnessContext.Provider value={{...myState,
-            onSelectHandler:onSelectHandler,
-            onSelectExerciseHandler:onSelectExerciseHandler,
-            OpenModalHandler:OpenModalHandler,
-            addExerciseTitle:addExerciseTitle,
-            addExerciseMuscle:addExerciseMuscle,
-            addExerciseDescription:addExerciseDescription,
-            addNewExerciseToList:addNewExerciseToList,
-            deleteExerciseFromList:deleteExerciseFromList,
-            onEditExercise:onEditExercise,
-            editExerciseTitle:editExerciseTitle,
-            editExerciseMuscle:editExerciseMuscle,
-            editExerciseDescription:editExerciseDescription,
-            saveEditedExercise:saveEditedExercise,
-            onAddcheckExistance:onAddcheckExistance,
-            onEditcheckExistance:onEditcheckExistance}}>
-            {props.children}
-        </FitnessContext.Provider>
-    );
-};
+
+    render() {
+        return (
+            <FitnessContext.Provider value={{...this.state,
+                onSelectHandler:this.onSelectHandler,
+                onSelectExerciseHandler:this.onSelectExerciseHandler,
+                OpenModalHandler:this.OpenModalHandler,
+                addExerciseTitle:this.addExerciseTitle,
+                addExerciseMuscle:this.addExerciseMuscle,
+                addExerciseDescription:this.addExerciseDescription,
+                addNewExerciseToList:this.addNewExerciseToList,
+                deleteExerciseFromList:this.deleteExerciseFromList,
+                onEditExercise:this.onEditExercise,
+                editExerciseTitle:this.editExerciseTitle,
+                editExerciseMuscle:this.editExerciseMuscle,
+                editExerciseDescription:this.editExerciseDescription,
+                saveEditedExercise:this.saveEditedExercise,
+                onEditcheckExistance:this.onEditcheckExistance,
+                onAddcheckExistance:this.onAddcheckExistance,
+                onLoadData:this.onLoadData}}>
+                {this.props.children}
+            </FitnessContext.Provider>
+        );
+    }
+}
 
 export {ContexProvider, FitnessContext};

@@ -16,6 +16,7 @@ const ContexProvider=(props)=>{
     const [editExercise, setEditExercise]=useState(false);
     const [exerciseToEdit, setExerciseToEdit]=useState({});
     const [indexOfExeToEdit, setIndexOfExeToEdit]=useState('');
+    const [alreadyExists, setAlreadyExists]=useState(false);
     //setTodoList(prevTodoList => prevTodoList.concat(todoItem));
     const myState={
         muscles,
@@ -28,7 +29,8 @@ const ContexProvider=(props)=>{
         editExercise,
         exerciseToEdit,
         indexOfExeToEdit,
-        addBtnActive
+        addBtnActive,
+        alreadyExists
     };
 
     const onSelectHandler=(index)=>{
@@ -72,6 +74,22 @@ const ContexProvider=(props)=>{
 
         setAddedExercise({...addedExercise, title:tempTitle, id:tempId});
         //validateAddedExercise(true);//will not work immediately properly because of Asyn state update use "useEffect()" instead
+    };
+    const  onAddcheckExistance=(event)=>{
+        let tempId=event.target.value.replace(/ /g, '-').toLocaleLowerCase();
+        var existFlag=false;
+
+        exercises.forEach(exercise=>{
+            if(exercise.id===tempId){
+                existFlag=true;
+            }
+        });
+        if(existFlag){
+            setAlreadyExists(true);
+        }
+        else{
+            setAlreadyExists(false);
+        }
     };
     const addExerciseMuscle=(event)=>{
         setAddedExercise({...addedExercise, muscle:event.target.value});
@@ -126,6 +144,25 @@ const ContexProvider=(props)=>{
 
         setExerciseToEdit({...exerciseToEdit, title:tempTitle, id:tempId});
         //validateAddedExercise();
+    };
+    const onEditcheckExistance=(event)=>{
+        let tempId=event.target.value.replace(/ /g, '-').toLocaleLowerCase();
+        var editFlag=false;
+        exercises.forEach( (exercise)=>{
+            if(exercise.id===tempId){
+                editFlag=true;
+            }
+        });
+        if(exercises[indexOfExeToEdit].id===tempId){
+            editFlag=false;
+        }
+
+        if(editFlag){
+            setAlreadyExists(true);
+        }
+        else{
+            setAlreadyExists(false);
+        }
     };
     const editExerciseMuscle=(event)=>{
         setExerciseToEdit({...exerciseToEdit, muscle:event.target.value});
@@ -182,7 +219,9 @@ const ContexProvider=(props)=>{
             editExerciseTitle:editExerciseTitle,
             editExerciseMuscle:editExerciseMuscle,
             editExerciseDescription:editExerciseDescription,
-            saveEditedExercise:saveEditedExercise}}>
+            saveEditedExercise:saveEditedExercise,
+            onAddcheckExistance:onAddcheckExistance,
+            onEditcheckExistance:onEditcheckExistance}}>
             {props.children}
         </FitnessContext.Provider>
     );

@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import {muscles, exercises} from './store';
+import axios from 'axios';
 
 const FitnessContext=React.createContext();
 
 class ContexProvider extends Component{
 
     state={
-        muscles:muscles,
-        exercises,
-        selectedMuscle:muscles,
+        muscles:[],
+        exercises:[],
+        selectedMuscle:[],
         footerMenuToSelect:0,
         selectedExercise:null,
         OpenCreateExerciseModal:false,
@@ -24,8 +25,27 @@ class ContexProvider extends Component{
         indexOfExeToEdit:'',
         alreadyExists:false,
     };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    onLoadData=()=>{
+        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/muscles.json')
+            .then(res=>{
+                this.setState({muscles:res.data, selectedMuscle:res.data});
+                console.log(res);
+            }).catch(err=>console.log(err));
 
-
+        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json')
+            .then(res=>{
+                this.setState({exercises:res.data});
+                console.log(res);
+            }).catch(err=>console.log(err));
+    };
+    onSaveData=()=>{
+        axios.put('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json', this.state.exercises)
+            .then(res=>{
+                console.log(res);
+            }).catch(err=>console.log(err));
+    };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     onSelectHandler=(index)=>{
         let temSelectedMuscle=[];
         let tempFooterMenuSelection=0;
@@ -89,7 +109,9 @@ class ContexProvider extends Component{
     };
     addNewExerciseToList=()=>{
         this.setState({exercises:[...this.state.exercises, this.state.addedExercise],  OpenCreateExerciseModal:false},
-            ()=>{ this.setState({addedExercise:{id:'', title: '',description: '',muscle: ''} });
+            ()=>{ this.setState({addedExercise:{id:'', title: '',description: '',muscle: ''} }, ()=>{
+                this.onSaveData();
+            });
             });
     };
 
@@ -135,7 +157,6 @@ class ContexProvider extends Component{
             }
         });
         if(this.state.exercises[this.state.indexOfExeToEdit].id===tempId){
-            console.log('this.state.exerciseToEdit.id=',this.state.exerciseToEdit.id,'tempId',tempId);
             editFlag=false;
         }
 
@@ -163,8 +184,9 @@ class ContexProvider extends Component{
                 return exercise;
             }
         });
-        console.log('EditedExercise',tempExercises);
-        this.setState({exercises:tempExercises, editExercise:false, exerciseToEdit:null});
+        this.setState({exercises:tempExercises, editExercise:false, exerciseToEdit:null}, ()=>{
+            this.onSaveData();
+        });
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     deleteExerciseFromList=(id)=>{
@@ -176,7 +198,9 @@ class ContexProvider extends Component{
         tempExercises=tempExercises.filter(exercise=>exercise.id!==id);
 
         this.setState({exercises:tempExercises, editExercise:false},()=>this.setState({
-            selectedExercise:null, exerciseToEdit:null, indexOfExeToEdit:''})
+                selectedExercise:null, exerciseToEdit:null, indexOfExeToEdit:''}, ()=>{
+                this.onSaveData();console.log('working');
+            })
         );
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,7 +222,8 @@ class ContexProvider extends Component{
                 editExerciseDescription:this.editExerciseDescription,
                 saveEditedExercise:this.saveEditedExercise,
                 onEditcheckExistance:this.onEditcheckExistance,
-                onAddcheckExistance:this.onAddcheckExistance}}>
+                onAddcheckExistance:this.onAddcheckExistance,
+                onLoadData:this.onLoadData}}>
                 {this.props.children}
             </FitnessContext.Provider>
         );
