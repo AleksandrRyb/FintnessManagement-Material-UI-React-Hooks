@@ -30,19 +30,19 @@ class ContexProvider extends Component{
         axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/muscles.json')
             .then(res=>{
                 this.setState({muscles:res.data, selectedMuscle:res.data});
-                console.log(res);
+                //console.log(res);
             }).catch(err=>console.log(err));
 
         axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json')
             .then(res=>{
                 this.setState({exercises:res.data});
-                console.log(res);
+                //console.log(res);
             }).catch(err=>console.log(err));
     };
     onSaveData=()=>{
         axios.put('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json', this.state.exercises)
             .then(res=>{
-                console.log(res);
+                //console.log(res);
             }).catch(err=>console.log(err));
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +53,7 @@ class ContexProvider extends Component{
         if(index < 0){
             temSelectedMuscle=this.state.muscles;
             tempFooterMenuSelection=0;
+            this.setState({selectedExercise:null});
         }else {
             this.state.muscles.forEach((muscle, ind)=>{
                 if(ind===index){
@@ -184,7 +185,7 @@ class ContexProvider extends Component{
                 return exercise;
             }
         });
-        this.setState({exercises:tempExercises, editExercise:false, exerciseToEdit:null}, ()=>{
+        this.setState({exercises:tempExercises, editExercise:false, exerciseToEdit:null, selectedExercise:editedExercise}, ()=>{
             this.onSaveData();
         });
     };

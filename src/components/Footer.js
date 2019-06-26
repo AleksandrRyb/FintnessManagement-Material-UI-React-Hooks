@@ -10,7 +10,7 @@ const Footer = ({width}) => {
 
     return (
         <Paper>
-            <Tabs value={footerMenuToSelect}  indicatorColor="primary" textColor="primary" centered={width!=='xs'} scrollButtons="on" variant="scrollable">
+            <Tabs value={footerMenuToSelect}  indicatorColor="primary" textColor="primary" centered={width!=='xs'} scrollButtons="on" variant={width==='xs'? "scrollable":false}>
                 <Tab label="All" onClick={()=>context.onSelectHandler(-1)}/>
                 {muscles.map((muscle, index)=>{
                     return <Tab label={muscle} key={muscle} onClick={()=>context.onSelectHandler(index)}></Tab>

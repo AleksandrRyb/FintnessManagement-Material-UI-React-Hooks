@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Input from '@material-ui/core/Input';
-import withWidth from '@material-ui/core/withWidth';
+
 
 
 
@@ -20,7 +20,7 @@ const ReusableForm = (props) => {
             <TextField
                 id="standard-name"
                 label="Title"
-                className={props.classes.formControl}
+                fullWidth
                 value={title}
                 onChange={(event)=>props.onTitleTextFieldHandler(event)}
                 onInput={(event)=>props.onCheckExistance(event)}
@@ -29,11 +29,10 @@ const ReusableForm = (props) => {
             />
             {alreadyExists? <p style={{color:'red'}}>Title already exists please use an unique one</p>: ''}
             <br/>
-            <FormControl>
-                <NativeSelect  className={props.classes.formControl}
-                               value={muscle}
-                               onChange={(event)=>props.onMuscleNativeSelectHandler(event)}
+            <FormControl fullWidth>
+                <NativeSelect  value={muscle}
                                style={{cursor:'pointer'}}
+                               onChange={(event)=>props.onMuscleNativeSelectHandler(event)}
                                input={<Input name="muscle" id="muscle" placeholder="Please select"/>}>
                     <option value={''} disabled></option>
                     {muscles.map(muscle=><option value={muscle} key={muscle}>{muscle}</option>)}
@@ -45,7 +44,7 @@ const ReusableForm = (props) => {
                 label="Description"
                 multiline
                 rowsMax="4"
-                className={props.classes.formControl}
+                fullWidth
                 value={description}
                 onChange={(event)=>props.onDcpTitleTextFieldHandler(event)}
                 margin="normal"
@@ -61,4 +60,4 @@ const ReusableForm = (props) => {
     );
 };
 
-export default withWidth()(ReusableForm);
+export default ReusableForm;

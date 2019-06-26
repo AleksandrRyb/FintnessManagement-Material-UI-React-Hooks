@@ -88,16 +88,14 @@ const Exercises =(props)=>{
                                                 onMuscleNativeSelectHandler={context.editExerciseMuscle}
                                                 onDcpTitleTextFieldHandler={context.editExerciseDescription}
                                                 onButtonHandler={context.saveEditedExercise}/> ) :
-                  ( <React.Fragment>
-                     <Paper className={EditFormClasses.Paper}>
+                   ( <Paper className={EditFormClasses.Paper}>
                         <Typography variant="h4" style={{marginTop:'20px'}}>
                             {selectedExercise? selectedExercise.title:'Welcome'}
                         </Typography>
                         <Typography variant="body1">
                             {selectedExercise? '':'Please select exercise from the list on the left'}{selectedExercise? selectedExercise.description:''}
                         </Typography>
-                     </Paper>
-                   </React.Fragment> )
+                     </Paper> )
                 }
             </Grid>
         </Grid>

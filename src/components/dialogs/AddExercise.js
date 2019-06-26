@@ -40,7 +40,7 @@ const AddExercise=(props)=>{
             <Fab color="secondary" aria-label="Add" size="small" className={classes.fab} onClick={context.OpenModalHandler}>
                 <AddIcon />
             </Fab>
-            <Dialog open={OpenCreateExerciseModal} onClose={context.OpenModalHandler} aria-labelledby="form-dialog-title">
+            <Dialog open={OpenCreateExerciseModal} onClose={context.OpenModalHandler} aria-labelledby="form-dialog-title" fullWidth>
 
                 <DialogTitle id="form-dialog-title">Create a New Exercise</DialogTitle>
 

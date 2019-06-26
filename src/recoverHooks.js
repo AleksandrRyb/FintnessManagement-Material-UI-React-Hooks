@@ -39,19 +39,19 @@ const ContexProvider=(props)=>{
             .then(res=>{
                 setMuscles(res.data);
                 setSelectedMuscle(res.data);
-                console.log(res);
+                //console.log(res);
             }).catch(err=>console.log(err));
 
         axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json')
             .then(res=>{
                 setExercises(res.data);
-                console.log(res);
+                //console.log(res);
             }).catch(err=>console.log(err));
     };
     const onSaveData=()=>{
         axios.put('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json', exercises)
             .then(res=>{
-                console.log(res);
+                //console.log(res);
             }).catch(err=>console.log(err));
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +62,7 @@ const ContexProvider=(props)=>{
         if(index < 0){
             temSelectedMuscle=muscles;
             tempFooterMenuSelection=0;
+            setSelectedExercise(null);
         }else {
             muscles.forEach((muscle, ind)=>{
                 if(ind===index){
