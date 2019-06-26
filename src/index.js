@@ -4,18 +4,26 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {ContexProvider} from './contex';
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import { createMuiTheme } from '@material-ui/core/styles';//to apply theme
 import { ThemeProvider } from '@material-ui/styles';//Need to warp the <App/> with it like Redux
-
-import purple from '@material-ui/core/colors/purple';
+import {purple, pink} from '@material-ui/core/colors';
 const theme=createMuiTheme({ //Changing the default properties of the theme
     palette:{
         primary:purple,
+        secondary:{
+            main:pink.A200,
+            light:pink.A400,
+            dark:pink.A700
+        },
+        //type:'dark',
     }
 });
 
 //console.log(theme)
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>

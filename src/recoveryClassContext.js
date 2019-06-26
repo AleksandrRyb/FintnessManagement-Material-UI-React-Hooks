@@ -27,20 +27,20 @@ class ContexProvider extends Component{
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     onLoadData=()=>{
-        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/muscles.json')
-            .then(res=>{
-                this.setState({muscles:res.data, selectedMuscle:res.data});
-                //console.log(res);
-            }).catch(err=>console.log(err));
-
-        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json')
+        axios.get(process.env.REACT_APP_SERVER+'/exercises.json')
             .then(res=>{
                 this.setState({exercises:res.data});
-                //console.log(res);
+                console.log(res);
             }).catch(err=>console.log(err));
+        axios.get(process.env.REACT_APP_SERVER+'/muscles.json')
+            .then(res=>{
+                this.setState({muscles:res.data, selectedMuscle:res.data});
+                console.log(res);
+            }).catch(err=>console.log(err));
+
     };
     onSaveData=()=>{
-        axios.put('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json', this.state.exercises)
+        axios.put(process.env.REACT_APP_SERVER+'/exercises.json', this.state.exercises)
             .then(res=>{
                 //console.log(res);
             }).catch(err=>console.log(err));

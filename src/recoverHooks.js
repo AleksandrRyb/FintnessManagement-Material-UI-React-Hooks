@@ -35,14 +35,14 @@ const ContexProvider=(props)=>{
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const onLoadData=()=>{
-        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/muscles.json')
+        axios.get(process.env.REACT_APP_SERVER+'/muscles.json')
             .then(res=>{
                 setMuscles(res.data);
                 setSelectedMuscle(res.data);
                 //console.log(res);
             }).catch(err=>console.log(err));
 
-        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json')
+        axios.get(process.env.REACT_APP_SERVER+'/exercises.json')
             .then(res=>{
                 setExercises(res.data);
                 //console.log(res);
