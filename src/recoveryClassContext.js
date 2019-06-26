@@ -199,7 +199,7 @@ class ContexProvider extends Component{
 
         this.setState({exercises:tempExercises, editExercise:false},()=>this.setState({
                 selectedExercise:null, exerciseToEdit:null, indexOfExeToEdit:''}, ()=>{
-                this.onSaveData();console.log('working');
+                this.onSaveData();
             })
         );
     };

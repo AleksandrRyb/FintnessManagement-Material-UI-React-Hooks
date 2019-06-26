@@ -1,21 +1,25 @@
-import React from 'react';
+import React, {useContext} from 'react';
 //import AppBar from '@material-ui/core/AppBar';
 //import Toolbar from '@material-ui/core/Toolbar';
-import {AppBar, Toolbar, IconButton, Typography, Button} from '@material-ui/core';
+import {AppBar, Toolbar, IconButton, Typography} from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
 import AddEcercise from './dialogs/AddExercise';
+import {FitnessContext} from '../contex';
 
-const Header = () => {
+const Header = (props) => {
+
+    const context=useContext(FitnessContext);
+
     return (
         <div>
             <AppBar position="static" >
                 <Toolbar>
-                    <IconButton edge="start"  color="inherit" aria-label="Menu">
+                    <IconButton edge="start"  color="inherit" aria-label="Menu" onClick={()=>context.onSelectHandler(-1)}>
                         <Menu/>
                     </IconButton>
 
                     <Typography variant="h6" style={{flex:1}}>
-                       Fitness Manager
+                        Fitness Manager
                     </Typography>
 
                     <AddEcercise />
