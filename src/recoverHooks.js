@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {muscles as m, exercises as e} from './store';
+import axios from 'axios';
 
 const FitnessContext=React.createContext();
 
 const ContexProvider=(props)=>{
 
-    const [muscles, setMuscles]=useState(m);
-    const [exercises, setExercises]=useState(e);
-    const [selectedMuscle, setSelectedMuscle]=useState(m);
+    const [muscles, setMuscles]=useState([]);
+    const [exercises, setExercises]=useState([]);
+    const [selectedMuscle, setSelectedMuscle]=useState([]);
     const [footerMenuToSelect, setFooterMenuToSelect]=useState(0);
     const [selectedExercise, setSelectedExercise]=useState(null);
     const [OpenCreateExerciseModal, setOpenCreateExerciseModal]=useState(false);
@@ -32,7 +33,28 @@ const ContexProvider=(props)=>{
         addBtnActive,
         alreadyExists
     };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const onLoadData=()=>{
+        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/muscles.json')
+            .then(res=>{
+                setMuscles(res.data);
+                setSelectedMuscle(res.data);
+                console.log(res);
+            }).catch(err=>console.log(err));
 
+        axios.get('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json')
+            .then(res=>{
+                setExercises(res.data);
+                console.log(res);
+            }).catch(err=>console.log(err));
+    };
+    const onSaveData=()=>{
+        axios.put('https://e-handy-store.firebaseio.com/FitnessManagement/exercises.json', exercises)
+            .then(res=>{
+                console.log(res);
+            }).catch(err=>console.log(err));
+    };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const onSelectHandler=(index)=>{
         let temSelectedMuscle=[];
         let tempFooterMenuSelection=0;
@@ -60,7 +82,6 @@ const ContexProvider=(props)=>{
             }
         })
     };
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const OpenModalHandler=()=>{
@@ -187,8 +208,12 @@ const ContexProvider=(props)=>{
         });
         setExercises(tempExercises);
         setEditExercise(false);
+        setSelectedExercise(editedExercise);
         setExerciseToEdit({});
     };
+    useEffect(()=>{
+        onSaveData();
+    },[exercises]);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const deleteExerciseFromList=(id)=>{
         let tempExercises=[];
@@ -203,8 +228,10 @@ const ContexProvider=(props)=>{
         setSelectedExercise(null);
         setExerciseToEdit({});
         setIndexOfExeToEdit('');
+        onSaveData();
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     return (
         <FitnessContext.Provider value={{...myState,
             onSelectHandler:onSelectHandler,
@@ -221,7 +248,8 @@ const ContexProvider=(props)=>{
             editExerciseDescription:editExerciseDescription,
             saveEditedExercise:saveEditedExercise,
             onAddcheckExistance:onAddcheckExistance,
-            onEditcheckExistance:onEditcheckExistance}}>
+            onEditcheckExistance:onEditcheckExistance,
+            onLoadData:onLoadData}}>
             {props.children}
         </FitnessContext.Provider>
     );
