@@ -132,7 +132,6 @@ const ContexProvider=(props)=>{
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     const validateAddedExercise=(toAddNew)=>{
         if(toAddNew){
             var {title, muscle, description}=addedExercise;

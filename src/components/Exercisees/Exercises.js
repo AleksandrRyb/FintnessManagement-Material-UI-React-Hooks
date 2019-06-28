@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';//For functional Component
 const useEditFormStyles=makeStyles(theme=>({
     formControl:{
         minWidth:'50em',
-        marginLeft: theme.spacing(1),
+        marginLeft:  theme.spacing(1),
         marginRight: theme.spacing(1),
     },
     Paper:{
@@ -21,7 +21,31 @@ const useEditFormStyles=makeStyles(theme=>({
         marginBottom:10,
         height:500,
         overflowY:'auto',
-        marginLeft:0
+        marginLeft:0,
+        /*[theme.breakpoints.up('sm')]:{
+            marginTop:5,
+            height:'calc(100% - 64px - 48px)'
+        }, */
+        [theme.breakpoints.down('xs')]:{
+            height:'100%'
+        }
+    },
+    //https://material-ui.com/customization/breakpoints/
+    container:{
+        [theme.breakpoints.up('sm')]:{
+            height:'calc(100% - 64px - 48px)'
+        },
+        [theme.breakpoints.down('xs')]:{
+            height:'calc(100% - 64px - 48px)'
+        }
+    },
+    item:{
+        [theme.breakpoints.down('xs')]:{
+            height:'50%'
+        }
+    },
+    spacing:{
+        unit:0
     }
 }));
 const style={
@@ -44,8 +68,8 @@ const Exercises =(props)=>{
 
 
     return (
-        <Grid container>
-            <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
+        <Grid container className={EditFormClasses.container}>
+            <Grid item className={EditFormClasses.item} xs={12} sm={4} md={4} lg={4} xl={4}>
                 <Paper className={EditFormClasses.Paper}>
                     {selectedMuscle.map(muscle=>{
                         return(
@@ -79,7 +103,7 @@ const Exercises =(props)=>{
                     }
                 </Paper>
             </Grid>
-            <Grid item xs={12} sm={8} md={8} lg={8} xl={8}>
+            <Grid item className={EditFormClasses.item} xs={12} sm={8} md={8} lg={8} xl={8}>
                 { editExercise? ( <ReusableForm toEdit
                                                 classes={EditFormClasses}
                                                 addedExercise={{muscles, title, description, muscle, addBtnActive, alreadyExists}}

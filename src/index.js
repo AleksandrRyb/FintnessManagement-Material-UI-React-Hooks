@@ -9,14 +9,13 @@ import {ContexProvider} from './contex';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import { createMuiTheme } from '@material-ui/core/styles';//to apply theme
 import { ThemeProvider } from '@material-ui/styles';//Need to warp the <App/> with it like Redux
-import {purple, pink} from '@material-ui/core/colors';
+import {purple, pink, red} from '@material-ui/core/colors';
 const theme=createMuiTheme({ //Changing the default properties of the theme
     palette:{
-        primary:purple,
         secondary:{
-            main:pink.A200,
-            light:pink.A400,
-            dark:pink.A700
+            main:red.A200,
+            light:red.A400,
+            dark:red.A700
         },
         //type:'dark',
     }

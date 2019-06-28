@@ -113,7 +113,7 @@ class ContexProvider extends Component{
             ()=>{ this.setState({addedExercise:{id:'', title: '',description: '',muscle: ''} }, ()=>{
                 this.onSaveData();
             });
-            });
+        });
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
